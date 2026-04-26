@@ -113,6 +113,44 @@ Plan for week W2 (2026-04-27 → 2026-05-03):
   Stretch: FlagAttention packaging (Python path)
 ```
 
+## Update 2026-04-26 evening — pulling more into W1
+
+Local validation removed the highest-uncertainty item from W1, so we
+can pull additional work forward into the same week without blockers:
+
+```
+Added to W1 (no external dependency):
+  - FlagTree-nvidia RPM build           +1 package
+  - libtriton-jit added to components/  pure config
+  - YUM-side local validation           proves RPM half of pipeline
+  - FlagCX RPM local rebuild            +6 packages (3 backends × 2)
+  - Repo polish: LICENSE, *_cn.md,
+    add-component.md
+  - Dockerfile narrow-COPY optimization (FlagTree)
+
+After this batch, expected cumulative: ~19/40 packages reachable via
+the local pipeline.
+```
+
+## Known issues to revisit
+
+### FlagTree bundles more than LLVM
+
+The wheel bundles four upstream artifacts: LLVM (~hundreds MB),
+pybind11, NVIDIA `ptxas`, and NVIDIA `cuobjdump`. The two NVIDIA tools
+are proprietary (CUDA EULA), placing the assembled package outside
+Debian DFSG-free and Fedora-main eligibility. `debian/copyright` and
+the RPM `%license` block currently under-document these embeds.
+
+Action items, rough priority:
+1. (now) Enumerate every bundled component's license in
+   `debian/copyright` and the spec — closes a real legal gap.
+2. (this quarter) Investigate factoring NVIDIA tools out — either a
+   separate `flagtree-nvidia-tools` package, or runtime discovery of
+   system-installed CUDA toolkit.
+3. (track upstream) When Triton supports building against system
+   LLVM, drop the bundled LLVM. Currently blocked on upstream Triton.
+
 ## Risks worth watching
 
 - 7 FlagTree backends each need a vendor SDK in the build container.
