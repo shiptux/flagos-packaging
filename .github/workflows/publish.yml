@@ -1,0 +1,107 @@
+name: Publish FlagOS package repositories
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag to publish under (default: v<YYYY.MM.DD>)'
+        required: false
+  schedule:
+    - cron: '0 18 * * 0'  # weekly, Sunday 18:00 UTC
+
+permissions:
+  contents: write   # release create/upload, gh-pages push
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.emit.outputs.matrix }}
+      release_tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install yq
+        run: sudo snap install yq || (sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 && sudo chmod +x /usr/local/bin/yq)
+      - id: emit
+        run: echo "matrix=$(./scripts/collect-artifacts.sh --emit-matrix)" >> "$GITHUB_OUTPUT"
+      - id: tag
+        run: |
+          tag="${{ github.event.inputs.release_tag }}"
+          [ -z "$tag" ] && tag="v$(date -u +%Y.%m.%d)"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+  download:
+    needs: collect
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.collect.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dawidd6/action-download-artifact@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repo: ${{ matrix.upstream }}
+          workflow: ${{ matrix.workflow }}
+          workflow_conclusion: success
+          name: ${{ matrix.pattern }}
+          name_is_regexp: true
+          path: collected/${{ matrix.component }}/${{ matrix.format }}/
+      - uses: actions/upload-artifact@v7
+        with:
+          name: collected-${{ matrix.component }}-${{ matrix.format }}
+          path: collected/
+
+  publish:
+    needs: [collect, download]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v7
+        with:
+          path: collected/
+          pattern: collected-*
+          merge-multiple: true
+      - name: Install repo tooling
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq reprepro createrepo-c debsigs rpm gnupg apt-utils
+      - name: Import GPG key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "trust-model always" >> ~/.gnupg/gpg.conf
+          # Export the key ID for downstream steps
+          KEY_ID=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec:/ {print $5; exit}')
+          echo "GPG_KEY_ID=$KEY_ID" >> "$GITHUB_ENV"
+          gpg --armor --export "$KEY_ID" > config/gpg-key.pub
+      - name: Sign packages
+        env:
+          GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: ./scripts/sign-packages.sh
+      - name: Build APT repo
+        env:
+          GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
+          RELEASE_TAG: ${{ needs.collect.outputs.release_tag }}
+          GH_REPO: ${{ github.repository }}
+        run: ./scripts/build-apt-repo.sh
+      - name: Build YUM repos
+        env:
+          GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
+          RELEASE_TAG: ${{ needs.collect.outputs.release_tag }}
+          GH_REPO: ${{ github.repository }}
+        run: ./scripts/build-yum-repo.sh
+      - name: Upload binaries to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ needs.collect.outputs.release_tag }}
+          GH_REPO: ${{ github.repository }}
+        run: ./scripts/publish-release.sh
+      - name: Push metadata to gh-pages
+        env:
+          GH_REPO: ${{ github.repository }}
+        run: ./scripts/publish-pages.sh

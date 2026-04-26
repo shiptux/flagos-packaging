@@ -1,0 +1,14 @@
+name: flagcx
+upstream: flagos-ai/FlagCX
+display_name: FlagCX
+workflows:
+  deb:
+    name: build-deb.yml
+    artifact_pattern: "flagcx-*-packages"
+  rpm:
+    name: build-rpm.yml
+    artifact_pattern: "flagcx-*-rpm-packages"
+notes: |
+  Three backends in one source: nvidia, metax, ascend.
+  Each backend uploads its own artifact directory, e.g.
+  flagcx-nvidia-packages, flagcx-metax-packages, flagcx-ascend-packages.

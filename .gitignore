@@ -1,0 +1,25 @@
+# Build outputs (artifacts collected from upstream, signed, indexed)
+collected/
+signed/
+apt-repo/
+yum-repo/
+output/
+*.deb
+*.rpm
+*.changes
+*.buildinfo
+*.dsc
+*.tar.gz
+*.tar.xz
+
+# GPG keyring (operators use Secrets in CI; never commit private material)
+*.gpg
+*.asc
+!config/gpg-key.pub
+
+# Editor / OS junk
+.vscode/
+.idea/
+.DS_Store
+*~
+*.swp
