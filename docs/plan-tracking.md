@@ -134,6 +134,26 @@ the local pipeline.
 
 ## Known issues to revisit
 
+### Multi-Python-ABI matrix needed for FlagTree RPMs
+
+The wheel-builder stage in FlagTree's Dockerfile.rpm produces a wheel
+tagged `cp310-cp310-linux_x86_64`. That wheel installs cleanly on
+hosts with Python 3.10 (Ubuntu 22.04, OpenEuler 24.03, fedora:36) but
+is rejected outright by `pip install` on Python 3.11+ hosts —
+including fedora:43 (Python 3.14).
+
+For now we target Python 3.10 only and the RPM builds on `fedora:36`
+to match. To cover the full distro matrix (fedora 43, OpenCloudOS 9,
+OpenAnolis 8, OpenEuler 24.03, etc.) we need either:
+
+- A build matrix that produces one wheel per Python ABI, or
+- A noarch wrapper RPM that depends on the right `python3.X-flagtree`
+  binary RPM.
+
+Action: track as W2 work. Don't expand the published RPM set until
+this is solved, otherwise users on fedora 43 install our RPM and it
+silently fails to import.
+
 ### FlagTree bundles more than LLVM
 
 The wheel bundles four upstream artifacts: LLVM (~hundreds MB),
