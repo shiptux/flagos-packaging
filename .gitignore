@@ -24,3 +24,4 @@ output/
 *~
 *.swp
 tests/local-out/
+tests/local-out-yum/
