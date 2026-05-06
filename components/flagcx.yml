@@ -4,11 +4,13 @@ display_name: FlagCX
 workflows:
   deb:
     name: build-deb.yml
-    artifact_pattern: "flagcx-*-packages"
+    # W2 single-chain: nvidia only. Widen to "flagcx-*-packages" once the
+    # other backends (metax, ascend) are added to the publish matrix.
+    artifact_pattern: "flagcx-nvidia-packages"
   rpm:
     name: build-rpm.yml
-    artifact_pattern: "flagcx-*-rpm-packages"
+    artifact_pattern: "flagcx-nvidia-rpm-packages"
 notes: |
-  Three backends in one source: nvidia, metax, ascend.
-  Each backend uploads its own artifact directory, e.g.
-  flagcx-nvidia-packages, flagcx-metax-packages, flagcx-ascend-packages.
+  Upstream produces three backends: nvidia, metax, ascend. For W2 we
+  publish only nvidia (single-chain policy, see docs/single-chain-policy.md).
+  metax/ascend are deferred until the publish matrix expands.

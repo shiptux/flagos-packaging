@@ -1,0 +1,16 @@
+name: flaggems
+upstream: flagos-ai/FlagGems
+display_name: FlagGems
+workflows:
+  deb:
+    name: build-deb.yml
+    artifact_pattern: "flag-gems-*-packages"
+  rpm:
+    name: build-rpm.yml
+    artifact_pattern: "flag-gems-*-rpm-packages"
+notes: |
+  FlagGems supports 14 backends upstream but selects at runtime via
+  GEMS_VENDOR — one wheel ships them all. So unlike FlagTree there's
+  no per-backend fan-out here. W2 ships Phase 1 (single bundled
+  python3-flag-gems); Phase 2 splits into libflaggems + libflaggems-dev
+  + python3-flag-gems is deferred.

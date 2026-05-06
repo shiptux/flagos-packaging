@@ -4,15 +4,14 @@ display_name: FlagTree
 workflows:
   deb:
     name: build-deb.yml
-    artifact_pattern: "flagtree-*-packages"
+    # W2 single-chain: nvidia only.
+    artifact_pattern: "flagtree-nvidia-packages"
   rpm:
     name: build-rpm.yml
-    artifact_pattern: "flagtree-*-rpm-packages"
+    artifact_pattern: "flagtree-nvidia-rpm-packages"
 notes: |
-  Currently only the nvidia backend is wired up (~36 min wall to build
-  the wheel; final .deb is 84 MB). Other backends (mthreads, metax, amd,
-  iluvatar, cambricon, hcu, xpu) require their respective vendor SDK in
-  the build container and are not yet packaged.
-
-  Installs into the "triton" Python namespace; conflicts with the
-  upstream python3-triton package.
+  FlagTree is the highest-fan-out component: 12 backends upstream, each
+  with its own Triton version + LLVM hash. W2 publishes nvidia only
+  (single-chain policy, see docs/single-chain-policy.md and
+  docs/per-component-backends.md). The full matrix is a separate
+  discussion that needs team alignment.
