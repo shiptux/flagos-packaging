@@ -1,0 +1,108 @@
+name: Staging publish (manual artifacts)
+
+# Self-contained validation flow that does NOT depend on any upstream
+# CI being healthy. The operator manually uploads .deb / .rpm files to
+# a GitHub Release tagged "staging-N", then triggers this workflow to
+# pull from that release, sign, index, and publish exactly the same
+# way the regular publish.yml does — but with the matrix download
+# step replaced by a single fetch from one Release.
+#
+# Why this exists:
+#   flagos-packaging is a packaging-design validation sandbox, not
+#   the official FlagOS distribution channel. We don't want to push
+#   schedule/trigger changes to upstream repos just so our sandbox
+#   can pull fresh artifacts. Manual staging keeps the sandbox
+#   self-contained.
+
+on:
+  workflow_dispatch:
+    inputs:
+      staging_tag:
+        description: 'GitHub Release tag containing the staging artifacts (e.g. staging-2026-05-11)'
+        required: true
+        default: 'staging-latest'
+      release_tag:
+        description: 'Tag for the published Release (default: v<YYYY.MM.DD>-staging)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Determine release tag
+        id: tag
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${{ github.event.inputs.release_tag }}"
+          [ -z "$tag" ] && tag="v$(date -u +%Y.%m.%d)-staging"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Pull staging artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p collected
+          gh release download "${{ github.event.inputs.staging_tag }}" \
+              --repo "${{ github.repository }}" \
+              --dir collected/ \
+              --pattern '*.deb' --pattern '*.rpm' \
+              || { echo "::error::Staging release '${{ github.event.inputs.staging_tag }}' has no .deb/.rpm assets"; exit 1; }
+          echo "Pulled artifacts:"
+          ls -lh collected/
+
+      - name: Install repo tooling
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq reprepro createrepo-c debsigs rpm gnupg apt-utils
+
+      - name: Import GPG key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          echo "trust-model always" >> ~/.gnupg/gpg.conf
+          KEY_ID=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec:/ {print $5; exit}')
+          echo "GPG_KEY_ID=$KEY_ID" >> "$GITHUB_ENV"
+          gpg --armor --export "$KEY_ID" > config/gpg-key.pub
+
+      - name: Sign packages
+        env:
+          GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: ./scripts/sign-packages.sh
+
+      - name: Build APT repo
+        env:
+          GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
+          RELEASE_TAG: ${{ steps.tag.outputs.tag }}
+          GH_REPO: ${{ github.repository }}
+        run: ./scripts/build-apt-repo.sh
+
+      - name: Build YUM repos
+        env:
+          GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
+          RELEASE_TAG: ${{ steps.tag.outputs.tag }}
+          GH_REPO: ${{ github.repository }}
+        run: ./scripts/build-yum-repo.sh
+        continue-on-error: true   # YUM half is optional for sandbox testing
+
+      - name: Upload binaries to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.tag.outputs.tag }}
+          GH_REPO: ${{ github.repository }}
+        run: ./scripts/publish-release.sh
+
+      - name: Push metadata to gh-pages
+        env:
+          GH_REPO: ${{ github.repository }}
+        run: ./scripts/publish-pages.sh
