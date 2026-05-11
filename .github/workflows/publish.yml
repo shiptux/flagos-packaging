@@ -34,10 +34,17 @@ jobs:
     needs: collect
     runs-on: ubuntu-latest
     strategy:
+      # Don't cancel sibling shards when one upstream is missing the
+      # workflow (e.g. its pr/packaging hasn't merged yet) or its
+      # artifacts have expired. Each shard is independent.
+      fail-fast: false
       matrix: ${{ fromJson(needs.collect.outputs.matrix) }}
     steps:
       - uses: actions/checkout@v6
       - uses: dawidd6/action-download-artifact@v6
+        # Treat missing artifacts as a soft failure. The publish job
+        # below proceeds with whatever artifacts ARE available.
+        continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ matrix.upstream }}
@@ -46,13 +53,27 @@ jobs:
           name: ${{ matrix.pattern }}
           name_is_regexp: true
           path: collected/${{ matrix.component }}/${{ matrix.format }}/
+          if_no_artifact_found: warn
+      - name: Check if any artifact was downloaded
+        id: check
+        run: |
+          if find collected -name '*.deb' -o -name '*.rpm' 2>/dev/null | grep -q .; then
+            echo "has_artifacts=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_artifacts=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::No artifacts found for ${{ matrix.component }}/${{ matrix.format }} (upstream workflow missing or artifacts expired)"
+          fi
       - uses: actions/upload-artifact@v7
+        if: steps.check.outputs.has_artifacts == 'true'
         with:
           name: collected-${{ matrix.component }}-${{ matrix.format }}
           path: collected/
 
   publish:
     needs: [collect, download]
+    # Run even if some download shards failed — publish whatever ARE
+    # available. Only skip publish if EVERY shard failed.
+    if: always() && needs.collect.result == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -63,6 +84,17 @@ jobs:
           path: collected/
           pattern: collected-*
           merge-multiple: true
+      - name: Fail loudly if no artifacts to publish
+        run: |
+          if ! find collected -name '*.deb' -o -name '*.rpm' 2>/dev/null | grep -q .; then
+            echo "::error::No artifacts available from any upstream — nothing to publish."
+            echo "Check that at least one upstream component's build CI has produced a"
+            echo "successful run with artifacts within the last 7 days."
+            echo "To wake an upstream: gh workflow run build-deb.yml --repo <upstream>"
+            exit 1
+          fi
+          echo "Artifacts available:"
+          find collected -name '*.deb' -o -name '*.rpm'
       - name: Install repo tooling
         run: |
           sudo apt-get update -qq
