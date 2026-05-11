@@ -26,10 +26,9 @@ if ! command -v yq >/dev/null 2>&1; then
     exit 1
 fi
 
-mkdir -p "${OUT_DIR}"
+# Only create output dir if we're actually going to collect — the
+# `--emit-matrix` and `list` modes don't write anything.
 
-# Emit a JSON matrix consumed by GitHub Actions when invoked via
-# `--emit-matrix`. Otherwise, just print the list of components.
 case "${1:-list}" in
     --emit-matrix)
         # Format: {"include": [{"component":"flagcx","upstream":"flagos-ai/FlagCX","format":"deb",...}, ...]}
@@ -40,8 +39,8 @@ case "${1:-list}" in
             name=$(yq -r '.name' "$f")
             upstream=$(yq -r '.upstream' "$f")
             for fmt in deb rpm; do
-                workflow=$(yq -r ".workflows.${fmt}.name // empty" "$f")
-                pattern=$(yq -r ".workflows.${fmt}.artifact_pattern // empty" "$f")
+                workflow=$(yq -r ".workflows.${fmt}.name // \"\"" "$f")
+                pattern=$(yq -r ".workflows.${fmt}.artifact_pattern // \"\"" "$f")
                 if [ -n "$workflow" ] && [ -n "$pattern" ]; then
                     [ $first -eq 0 ] && printf ','
                     first=0
