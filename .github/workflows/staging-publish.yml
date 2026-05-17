@@ -68,11 +68,27 @@ jobs:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
+          # Pre-configure gpg-agent for non-TTY operation BEFORE first
+          # gpg call spawns the agent. Without loopback pinentry, debsigs
+          # and rpmsign fail with "Inappropriate ioctl for device".
+          mkdir -p ~/.gnupg && chmod 700 ~/.gnupg
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "pinentry-mode loopback"  >> ~/.gnupg/gpg.conf
+          echo "trust-model always"      >> ~/.gnupg/gpg.conf
+          # Make sure no stale agent is around
+          gpgconf --kill gpg-agent 2>/dev/null || true
+
           echo "$GPG_PRIVATE_KEY" | gpg --batch --import
-          echo "trust-model always" >> ~/.gnupg/gpg.conf
           KEY_ID=$(gpg --list-secret-keys --with-colons | awk -F: '/^sec:/ {print $5; exit}')
           echo "GPG_KEY_ID=$KEY_ID" >> "$GITHUB_ENV"
           gpg --armor --export "$KEY_ID" > config/gpg-key.pub
+
+          # Quick self-test: sign /dev/null to confirm signing works in
+          # this environment before debsigs/rpmsign get involved.
+          echo test | gpg --batch --pinentry-mode loopback \
+              --passphrase "${GPG_PASSPHRASE:-}" \
+              --default-key "$KEY_ID" --clearsign > /dev/null
+          echo "gpg signing self-test passed"
 
       - name: Sign packages
         env:
