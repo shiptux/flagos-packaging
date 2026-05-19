@@ -1,0 +1,6 @@
+Archive: stable
+Component: main
+Origin: FlagOS
+Label: FlagOS
+Architecture: amd64
+Description: FlagOS unified package distribution

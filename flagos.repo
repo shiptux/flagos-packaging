@@ -1,0 +1,7 @@
+[flagos]
+name=FlagOS unified package distribution
+baseurl=https://shiptux.github.io/flagos-packaging/rpm/$releasever_short/$basearch
+enabled=1
+gpgcheck=1
+gpgkey=https://shiptux.github.io/flagos-packaging/pubkey.gpg
+repo_gpgcheck=1
