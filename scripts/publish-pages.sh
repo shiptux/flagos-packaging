@@ -63,7 +63,7 @@ git worktree add -B "${PAGES_BRANCH}" /tmp/flagos-pages "origin/${PAGES_BRANCH}"
     cd /tmp/flagos-pages
     rm -rf ./*
     cp -a "${STAGING}/." .
-    git add -A
+    git add -Af
     if git diff --cached --quiet; then
         echo "no metadata changes; skipping push"
     else
