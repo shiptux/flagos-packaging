@@ -10,9 +10,9 @@ Priority: optional
 Section: libs
 Filename: pool/main/f/flagcx/libflagcx-ascend_0.8.0-1_amd64.deb
 Size: 655124
-SHA256: 3652ba5bda431f88ab85b6a42acd73512fb411424b86374ced08ffa3831a40dc
-SHA1: 8861987a60757b56d921deaebf8ee8a1c381c8b6
-MD5sum: 029d27ce42d88d29b0059a128fcf1284
+SHA256: 8d9fa5f69199288cf793f9d5a0783777c10bd54177b21f3265ad368a7eb722d6
+SHA1: 86b7d51bf16d343f9d0fc79321d0fb0be62455b2
+MD5sum: 4eabbcf57b2644fa777485c013cea960
 Description: FlagCX communication library for Ascend NPUs
  FlagCX is a scalable and adaptive cross-chip communication library.
  It serves as a platform where developers, researchers, and AI engineers
@@ -33,9 +33,9 @@ Priority: optional
 Section: libdevel
 Filename: pool/main/f/flagcx/libflagcx-ascend-dev_0.8.0-1_amd64.deb
 Size: 7906
-SHA256: 2b60f817a3ba6fc13e30449ecf988570e5954154fdffd425c26ebe3d23b4a98a
-SHA1: 8d016d787084d64ccefac92088cd277a16bfb63e
-MD5sum: 24986bebc6eaa46624bdb6d297da63e6
+SHA256: ab4d720ce1d51828b76156035cb730007a216041bd1e40fb6c9e618b4659e669
+SHA1: 82f795606fb78e5e12a6e4dee9b7d8c34084c0ec
+MD5sum: 17c87b98ef53fd535627a3c3f73973b7
 Description: FlagCX development files for Ascend NPUs
  FlagCX is a scalable and adaptive cross-chip communication library.
  .
@@ -54,9 +54,9 @@ Priority: optional
 Section: libs
 Filename: pool/main/f/flagcx/libflagcx-metax_0.8.0-1_amd64.deb
 Size: 570030
-SHA256: d16674f3d1c2cc1c7cadf3a15bf376e5dd017a9a38d2765aab16952246668418
-SHA1: b7367fbac9eae48e7425bab33ee3dfd3824b1384
-MD5sum: 79506aabd64b7d72869caeb734408ead
+SHA256: e1b94cd27fc2993b4525280083023050fdcdd02b6b1dfd7b224a6bb90c56857e
+SHA1: 05e30c93a9e179502405d000ebd495d19d3d8a4f
+MD5sum: c4583d3b971f513a26e4d18d85ecd5b5
 Description: FlagCX communication library for MetaX hardware
  FlagCX is a scalable and adaptive cross-chip communication library.
  It serves as a platform where developers, researchers, and AI engineers
@@ -77,9 +77,9 @@ Priority: optional
 Section: libdevel
 Filename: pool/main/f/flagcx/libflagcx-metax-dev_0.8.0-1_amd64.deb
 Size: 7912
-SHA256: c19545d92cb7532f8a9f7a2933e98c002210446d66406894e469d44dce5e6fb3
-SHA1: 2581966baea2cc075dd0510dd68fc41ad8eb9798
-MD5sum: 19cc8727ff784ced322470a5681d5836
+SHA256: 1a6e3415627c8d0fd5e7283e848c5f1254a7016acf68843724e9df1949c6bbb6
+SHA1: be61b4fe81a30ad1229413f9515618efc1d679f9
+MD5sum: 806f29a132be824caaf8218b82d41b41
 Description: FlagCX development files for MetaX hardware
  FlagCX is a scalable and adaptive cross-chip communication library.
  .
@@ -98,9 +98,9 @@ Priority: optional
 Section: libs
 Filename: pool/main/f/flagcx/libflagcx-nvidia_0.8.0-1_amd64.deb
 Size: 583114
-SHA256: f8fdf24cb5c49d08172eb8a673d05c94427d8b78bf7de9b70c3b5661d6b51aa5
-SHA1: 587cdf879066ed8a4a48415ec1064fef7f2c9a8e
-MD5sum: 189c1737ffe0250c5926295c2e0a7e9f
+SHA256: 2a07e574711543f74ebeb4a1c1b47303b180f1c985a4512655247001fc0ac2b8
+SHA1: b6e63294b8dc937bd495dc92e483de1d7dc433f4
+MD5sum: 0991102ac0c039ead025532d4200e97a
 Description: FlagCX communication library for NVIDIA hardware
  FlagCX is a scalable and adaptive cross-chip communication library.
  It serves as a platform where developers, researchers, and AI engineers
@@ -121,9 +121,9 @@ Priority: optional
 Section: libdevel
 Filename: pool/main/f/flagcx/libflagcx-nvidia-dev_0.8.0-1_amd64.deb
 Size: 7920
-SHA256: 5c7d17584143185d51437420a470dadb5114aa6e70da0a0cbf714866b2c99ae9
-SHA1: b64edf91548d3da5b190163b80ab8998c3834262
-MD5sum: 82622c948495b96cd15ae8e161d7689f
+SHA256: db00ac5eb20717a0ce004bd423bf510a787205abcb66fabfc5453280a7804e1d
+SHA1: c177596895f808f90b15bcb145a33490187c5806
+MD5sum: a6dbfc0b6ce7798167fa2136b7c7b11f
 Description: FlagCX development files for NVIDIA hardware
  FlagCX is a scalable and adaptive cross-chip communication library.
  .
@@ -140,9 +140,9 @@ Priority: optional
 Section: libs
 Filename: pool/main/libt/libtriton-jit/libtriton-jit_0.1.0-1_amd64.deb
 Size: 146416
-SHA256: 0b47863c25249d42d695ff297b14032e9c86807d110d8c90fb3abd3f3355c906
-SHA1: d54b70ed341409c1ecd12e34c9b6a91bde15059e
-MD5sum: 208a308f61aba3bee75c43843988251e
+SHA256: 780bba200eaf3e36d618a636244bf7cb47e6917150d04dcb041f768396e15adb
+SHA1: 2957ed0134ff62d24fe5675a23e2e837fda2fb1c
+MD5sum: fc0157044a11732fbd195ba7ca252116
 Description: Triton JIT runtime library
  libtriton_jit is a C++ library providing Triton JIT runtime functionality.
  It enables just-in-time compilation of Triton kernels for GPU acceleration.
@@ -162,9 +162,9 @@ Priority: optional
 Section: libs
 Filename: pool/main/libt/libtriton-jit/libtriton-jit-dev_0.1.0-1_amd64.deb
 Size: 193926
-SHA256: c4252f1c0c1bd3ae02994508a29c417833de9db14d7f2de0c6cec75a735305d0
-SHA1: 71d06cf09ddffdd6a9a982651a1111b0fc806b05
-MD5sum: 3aeead468a0e912ee91060a295201691
+SHA256: 82cf041e94ead0acb07c3093c1ccc65bb919e14d3cc117422024a5663cb908f2
+SHA1: 38c7cebc18732cae37574fde81661f29231b48e7
+MD5sum: 02a8338ea8dce83fe8000014693b5725
 Description: Triton JIT runtime library - development files
  libtriton_jit is a C++ library providing Triton JIT runtime functionality.
  It enables just-in-time compilation of Triton kernels for GPU acceleration.
@@ -184,9 +184,9 @@ Priority: optional
 Section: python
 Filename: pool/main/f/flag-attention/python3-flag-attention_0.3.0-1_all.deb
 Size: 23726
-SHA256: 819023640a66915de525d9f8d89e9fee187f21234f96459f47e371d707972525
-SHA1: 1abe6c65c27bfa890e6ccf5854c5f125711f56ff
-MD5sum: f28e67a56c40b03b8699e7b9ccc446f1
+SHA256: 6b57de5d6d06320768565a6f81ea25e6f4eea4a8765e27069762fbbd0727e0ba
+SHA1: 37ee42a71039fdaec76ad9b80518445b62c3acd7
+MD5sum: c42f0c85bcb50cc2b48b8e9bd57a2a90
 Description: FlagAttention — memory-efficient attention operators (Triton)
  FlagAttention is a collection of memory-efficient attention operators
  implemented in the Triton language. It targets large-language-model
@@ -209,9 +209,9 @@ Priority: optional
 Section: python
 Filename: pool/main/f/flag-audio/python3-flag-audio_0.1.0-1_all.deb
 Size: 55204
-SHA256: 018427d55e95302ac30dce5eae82a9b0bd2186d9cde6e264191d87b9dbd7f16d
-SHA1: d7e022ac08a2024f613844464e5a4a773103b8df
-MD5sum: 2f931f4d028dce9b786e189daca7190e
+SHA256: 6e7ed02d053870792969dd8cae0a64fdc31b7f4dcb39dd087edf91909262c079
+SHA1: d8982e6b87853d4e685bda9888b0ba40860ec93a
+MD5sum: 9ecf629430af1a68957412acac643bea
 Description: FlagAudio — audio processing kernels for FlagOS
  Audio-domain operators (mel spectrogram, STFT/iSTFT, resampling) accelerated via Triton on FlagOS hardware.
 
@@ -227,9 +227,9 @@ Priority: optional
 Section: python
 Filename: pool/main/f/flag-blas/python3-flag-blas_0.1.0-1_all.deb
 Size: 75290
-SHA256: 5391a15262d0707cb995f3a087ad1a5b67b43110463d8badd7ab6456f01d3672
-SHA1: efb86df03db790f293695e44ce4893188c977240
-MD5sum: 636466126f87c530b1409009315ab0d3
+SHA256: 08ceb80ab36067ea7b8b55f4a8484ddec8ff7fae7b840043161d1d29d60ce1b9
+SHA1: 620eb3888741618b283756619a1c80818f3ca194
+MD5sum: aacb4034bd5076e6cb2fbf7223000fd4
 Description: FlagBLAS — linear-algebra kernels for FlagOS
  GEMM and related BLAS-level operators implemented in Triton, targeting FlagOS multi-vendor accelerators.
 
@@ -245,9 +245,9 @@ Priority: optional
 Section: python
 Filename: pool/main/f/flag-dnn/python3-flag-dnn_0.1.0-1_all.deb
 Size: 117508
-SHA256: 0f83d3f30d00f64c3c19b0b389057f04686135e1738ccb0efb62e0a3bf361fe0
-SHA1: 8d270badbec666ed7d6573a6558b98721933152d
-MD5sum: 1dcf22e50a1af7a13a693ff2f5c6a57f
+SHA256: 4a4cc5ae89dd97efabe71c208b8a20069b91a83dd78d16841d17e1334a980148
+SHA1: ef81ce90e173fd059a112cc0f160a68e4068ebf9
+MD5sum: 0ec7b1b2598d3a1ab6f05638a667ae92
 Description: FlagDNN — deep neural network primitives for FlagOS
  Collection of DNN operators (convolutions, normalizations, activations) targeting FlagOS-supported accelerators via Triton kernels.
 
@@ -264,9 +264,9 @@ Priority: optional
 Section: science
 Filename: pool/main/f/flag-gems/python3-flag-gems_5.0.2-1_amd64.deb
 Size: 618718
-SHA256: 5ccbe2ef1afd24ea2c25b23dbca8d5c2447386d7aef2eb91f8ba70f9ed052dd6
-SHA1: 8563d00b683e5e690f59266c99f3b3bd1ac04523
-MD5sum: 816e987a624b4205a61f703b4613eb1c
+SHA256: fe01e36627837c5dbad0a363ff1102c2bdeaf5e7af4afa4d275d45360ebd9878
+SHA1: ff3073cfe5af3142b9683ae9a7d7e2f28a8df6ea
+MD5sum: 6cefc9077c05ee0c812886ae16334e14
 Description: FlagGems GPU operator library (Python module)
  FlagGems is a GPU operator library written in Triton, providing a
  drop-in replacement for many torch.* operations with custom-tuned
@@ -290,9 +290,9 @@ Priority: optional
 Section: python
 Filename: pool/main/f/flagquantum/python3-flagquantum_0.1.0-1_all.deb
 Size: 37158
-SHA256: cad20663dcde73397c7a4c195a4552cc8c537e6a0f2cc72d3a6555f06dc5f555
-SHA1: 51e05c236bf1c360d8b0c0c0511e3530bd303e39
-MD5sum: dbafac663a5939add05d8fea152d1116
+SHA256: 755f91b8ea42f60d83567614035705aecdf5621045d6670a3920161ba2c3cea5
+SHA1: f00ccea1b8ce8a8e252aa10724737551619d65f3
+MD5sum: 021003cb9fbb62bc6cac46618885e4e6
 Description: FlagQuantum — quantum state-vector simulator for FlagOS
  High-performance distributed quantum statevector simulator built on the FlagOS unified multi-chip backend.
 
@@ -309,9 +309,9 @@ Priority: optional
 Section: python
 Filename: pool/main/f/flagscale/python3-flagscale_1.0.0-1_all.deb
 Size: 600840
-SHA256: 2f43ae9fce84118ff7723f59998e7fecc95001d4b8dff41356ac630f676179f3
-SHA1: ed616979f2515b91fad92a185fb559c8cbd7019b
-MD5sum: 1139d6d953e9ba812ffd91f50eba1bee
+SHA256: 7b359887fd27d48553616abd358c72255275ceb133bddc8a7f3daa8177977d7d
+SHA1: 9dfe74c808ea9b10645d8076f8aa434d91305de5
+MD5sum: 8df33b18fed64efb732ccbc4c5c960f1
 Description: FlagScale large model training toolkit
  FlagScale is a comprehensive toolkit designed to support the entire
  lifecycle of large models, including training, serving, inference,
@@ -335,9 +335,9 @@ Priority: optional
 Section: python
 Filename: pool/main/f/flagsparse/python3-flagsparse_1.0.0-1_all.deb
 Size: 72654
-SHA256: 47e35977fc39e11799219fac80271fc4a6cf19288cf975b31b9901a6ea575b03
-SHA1: d2f3d2248a1c5a0d911f43e95073255c3026306e
-MD5sum: a87f2467f4cddaa1c53f5400f1abca19
+SHA256: 4c493584afe0ee30312dbef90c10fb051df1999de72b213e3bd4a3ee14e06adc
+SHA1: 6dfbe620b813d6362a97b957fae95f429afe4812
+MD5sum: 924e322d02041e7fc8072c13ee410cfa
 Description: FlagSparse — sparse compute kernels for FlagOS
  Sparse-matrix operators (SpMM, SpMV, sampled dense-dense) for FlagOS-supported accelerators.
 
@@ -353,9 +353,9 @@ Priority: optional
 Section: python
 Filename: pool/main/f/flagtensor/python3-flagtensor_0.1.0-1_all.deb
 Size: 30528
-SHA256: 8e484c8ea2c5832424510a09674820def651fc238ce116371b1bb2730b370b9c
-SHA1: b375b7ab436ee49cd7f8a7310ed84cc359185947
-MD5sum: d316d1830b1bdfd53178d0623dc36567
+SHA256: 7fa6d94e0426d513125383f9b2c25e73d5de9125f504e6ed9fbc4089f6c655c0
+SHA1: 00eb6e8218fc36ecd9ebe597ff2d458f7ec775cd
+MD5sum: e3405d4043546ad2232889aee79aff45
 Description: FlagTensor — tensor utilities for FlagOS
  Tensor manipulation utilities (reshape/permute/index helpers) used across the FlagOS operator libraries.
 
@@ -375,9 +375,9 @@ Priority: optional
 Section: python
 Filename: pool/main/f/flagtree/python3-flagtree-nvidia_0.5.0-1_amd64.deb
 Size: 87144730
-SHA256: 50898ab8d738d718d80dd227e82ee09753e55606a7e51743c91962004d9e854a
-SHA1: 26587f4c5a2abd2ace4667cd7ac588ed37909e89
-MD5sum: 69e6dc0a6c4c3c141551eca4a351c7f5
+SHA256: b83c1d6eeec03118bd5ebec63197df8c64dbc2e406e608b7fa25d3d409fa139c
+SHA1: c20de60050834fbd579319f88717d252bfbefff8
+MD5sum: ec88f415a08fa0688ca566aa1717bf95
 Description: FlagTree compiler with NVIDIA backend
  FlagTree is a unified compiler supporting multiple AI chip backends for
  custom Deep Learning operations, forked from triton-lang/triton.
