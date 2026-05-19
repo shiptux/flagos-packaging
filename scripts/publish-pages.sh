@@ -29,9 +29,9 @@ STAGING="$(mktemp -d)"
 
 # Stage the new tree
 mkdir -p "${STAGING}/apt" "${STAGING}/rpm"
-[ -d "${APT_DIR}/dists" ] && cp -a "${APT_DIR}/dists" "${STAGING}/apt/"
+[ -d "${APT_DIR}/dists" ] && cp -a "${APT_DIR}/dists" "${STAGING}/apt/"; [ -d "${APT_DIR}/pool" ] && cp -a "${APT_DIR}/pool" "${STAGING}/apt/"
 [ -d "${YUM_DIR}" ] && cp -a "${YUM_DIR}/." "${STAGING}/rpm/"
-[ -f "${GPG_PUBLIC_KEY}" ] && cp "${GPG_PUBLIC_KEY}" "${STAGING}/pubkey.gpg"
+cp "${GPG_PUBLIC_KEY}" "${STAGING}/pubkey.gpg"  # required for apt-key
 
 # .repo template, expanded with the actual Pages URL
 PAGES_BASE="https://${GH_REPO%%/*}.github.io/${GH_REPO##*/}"
