@@ -23,7 +23,7 @@ on early PRs before tackling FlagTree / FlagCX RPM).
 | 8 | flagos-ai/FlagScale | pr/packaging | 2026-04-26 | — | not submitted | — | needs fork + user push |
 | 9 | flagos-ai/FlagGems | pr/packaging | 2026-05-21 | — | not submitted | — | needs fork + user push |
 | 10 | FlagTree/flagtree | pr/packaging | 2026-05-13 | — | not submitted | — | needs fork + user push (note: org is FlagTree not flagos-ai) |
-| 11 | flagos-ai/FlagCX | pr/rpm-packaging-clean | TBD | — | not submitted | — | needs Phase A rebase first |
+| 11 | flagos-ai/FlagCX | pr/rpm-packaging-clean | 2026-05-21 | — | not submitted | — | rebase done (df2540b, ad5b46c, 79efcce; 3 commits / 5 files); user decides: force-push to update #394, or open new PR replacing #394 |
 
 ## Already-open PRs (FlagCX, follow-up only)
 
