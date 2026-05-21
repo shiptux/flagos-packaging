@@ -13,7 +13,7 @@ on early PRs before tackling FlagTree / FlagCX RPM).
 
 | # | Repo | Branch | Last branch commit | PR URL | State | Last review | Blocker |
 |---|------|--------|---------------------|--------|-------|-------------|---------|
-| 1 | flagos-ai/FlagSparse | pr/packaging | 2026-05-21 | — | not submitted | — | needs fork + user push |
+| 1 | flagos-ai/FlagSparse | pr/packaging | 2026-05-21 | [#12](https://github.com/flagos-ai/FlagSparse/pull/12) | OPEN, no review | — | — |
 | 2 | flagos-ai/FlagAttention | pr/packaging | 2026-05-21 | — | not submitted | — | needs fork + user push |
 | 3 | flagos-ai/FlagDNN | pr/packaging | 2026-05-21 | — | not submitted | — | needs fork + user push |
 | 4 | flagos-ai/FlagBLAS | pr/packaging | 2026-05-21 | — | not submitted | — | needs fork + user push |
