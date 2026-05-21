@@ -41,7 +41,32 @@ on early PRs before tackling FlagTree / FlagCX RPM).
 
 Each row above has a corresponding body template at
 `per-repo-pr-bodies/<repo>.md`. Copy that markdown into the GitHub
-PR body field (or pass via `--body-file` if using `gh pr create`).
+PR body field (or pass via `--body-file` if using `command gh pr create`).
+
+## Suggested submission flow (per row)
+
+```sh
+# 10 of 11 repos need a fork on the user's account first.
+# Skip if the fork already exists (currently only shiptux/FlagCX does).
+command gh repo fork <upstream-org>/<Repo> --clone=false
+
+# In the local clone, add the user's fork as a separate remote
+cd /home/shiptux/git/github/<Repo>
+git remote add fork git@github.com:shiptux/<Repo>.git
+git push fork pr/packaging
+
+# Open the PR (web UI or CLI)
+command gh pr create \
+    --repo <upstream-org>/<Repo> \
+    --base main \
+    --head shiptux:pr/packaging \
+    --title "[packaging] Add Debian + RPM packaging" \
+    --body-file docs/per-repo-pr-bodies/<repo>.md
+```
+
+Replace `<upstream-org>` with `flagos-ai` for most repos, `FlagTree`
+for FlagTree, `FlagOpen` for FlagGems (current upstream org is
+FlagOpen, not flagos-ai — verify before pushing).
 
 ## How to update this tracker
 
