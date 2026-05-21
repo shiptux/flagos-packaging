@@ -22,7 +22,7 @@ on early PRs before tackling FlagTree / FlagCX RPM).
 | 7 | flagos-ai/FlagQuantum | pr/packaging | 2026-05-21 | — | not submitted | — | needs fork + user push |
 | 8 | flagos-ai/FlagScale | pr/packaging | 2026-04-26 | — | not submitted | — | needs fork + user push |
 | 9 | flagos-ai/FlagGems | pr/packaging | 2026-05-21 | — | not submitted | — | needs fork + user push |
-| 10 | FlagTree/flagtree | pr/packaging | 2026-05-13 | — | not submitted | — | needs fork + user push (note: org is FlagTree not flagos-ai) |
+| 10 | flagos-ai/flagtree | pr/packaging | 2026-05-13 | — | not submitted | — | needs fork + user push (repo name is lowercase `flagtree`) |
 | 11 | flagos-ai/FlagCX | pr/rpm-packaging-clean | 2026-05-21 | — | not submitted | — | rebase done (df2540b, ad5b46c, 79efcce; 3 commits / 5 files); user decides: force-push to update #394, or open new PR replacing #394 |
 
 ## Already-open PRs (FlagCX, follow-up only)
@@ -64,9 +64,8 @@ command gh pr create \
     --body-file docs/per-repo-pr-bodies/<repo>.md
 ```
 
-Replace `<upstream-org>` with `flagos-ai` for most repos, `FlagTree`
-for FlagTree, `FlagOpen` for FlagGems (current upstream org is
-FlagOpen, not flagos-ai — verify before pushing).
+Upstream org is `flagos-ai` for all 11 repos. Repo name on the
+FlagTree row is lowercase `flagtree` (one casing quirk).
 
 ## How to update this tracker
 
