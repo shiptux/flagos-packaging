@@ -54,11 +54,14 @@ Success = `VERIFY: ALL PASSED` in the build output.
 
 ## Recorded result
 
-- **Path A (cmake-install): PASSED 2026-06-15.**
-- **Path B (.deb): harness added 2026-06-25.** The deb build previously
-  OOM-ed at full-core parallelism; that is fixed here with
-  `parallel=4`. Confirm a green run with `./run.sh` before citing it as
-  passed.
+- **Path A (cmake-install): PASSED** 2026-06-15.
+- **Path B (.deb): PASSED** 2026-06-25 — full run reached
+  `VERIFY: ALL PASSED` with `libtriton_jit pr/packaging` + `FlagGems
+  master`. The earlier full-core-parallel OOM is fixed with
+  `parallel=4`. The `dpkg-shlibdeps: cannot find library libcuda.so.1`
+  line is expected and tolerated (devel image ships only the libcuda
+  stub; `debian/rules` `override_dh_shlibdeps ... || true` ignores it —
+  CUDA/torch aren't apt deps).
 
 The narrative conclusion + findings live in
 [`../../plan-tracking.md`](../../plan-tracking.md) under

@@ -46,6 +46,7 @@ RUN echo "VERIFY: env $(python3 --version), torch $(python3 -c 'import torch;pri
 #  Path A — cmake-install
 # ============================================================
 FROM env AS verify-cmake-install
+ARG BUILD_PARALLEL=4
 COPY libtriton_jit /src/libtriton_jit
 RUN cmake -S /src/libtriton_jit -B /tmp/ltj -GNinja \
         -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr \
