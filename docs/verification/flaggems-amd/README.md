@@ -94,3 +94,25 @@ docker run --rm --device=/dev/kfd --device=/dev/dri \
   AMD. It does **not** exercise `libtriton_jit` — a FlagGems-on-AMD
   C++ path would first need an upstream ROCm/HIP backend in
   `libtriton_jit` (see plan-tracking "AMD / ROCm direction").
+
+## noarch tier — AMD smoke matrix (noarch-smoke.sh, 2026-06-30)
+
+Tested the other pure-Python (noarch) components on the 780M. **Key
+refinement: noarch is necessary but NOT sufficient for AMD** — the
+library's own runtime must also recognise the AMD device.
+
+| Component | On 780M | Note |
+|-----------|---------|------|
+| FlagGems | ✅ (op runs) | has `_amd` runtime backend |
+| FlagTensor | ✅ `add` runs | |
+| FlagAttention | ✅ **flash_attention runs** | a heavy kernel — so not all heavy kernels hang; the FlagGems matmul-2048 hang was a specific case |
+| FlagSparse | ✅ imports | |
+| FlagBLAS | ❌ `RuntimeError: No device were detected` | its `runtime` device-detection has no AMD path |
+| FlagDNN | ❌ same | same — needs an AMD vendor added to its runtime |
+
+So the AMD card runtime-tests the components whose runtime recognises
+AMD (FlagGems / FlagTensor / FlagAttention / FlagSparse), not all
+noarch packages. FlagBLAS / FlagDNN would need upstream to add an AMD
+vendor to their `runtime` (like FlagGems' `_amd`).
+
+Run: `docker run ... -v ~/git/github:/s:ro -v ./noarch-smoke.sh:/v.sh:ro rocm/pytorch:latest bash /v.sh`
