@@ -55,14 +55,42 @@ Host requirements: amdgpu loaded, `/dev/kfd` + `/dev/dri` present, and
 the user in the `render` + `video` groups (no sudo). The
 `rocm/pytorch` image is ~30 GB on first pull.
 
+## Packaged-deb test (deb-test.sh) — 2026-06-30
+
+`verify.sh` runs FlagGems from a source checkout. `deb-test.sh` goes one
+step further: it `dpkg -i`-installs our **`python3-flag-gems` deb** and
+runs it on the 780M — the first FlagOS package validated on real
+consumer AMD hardware end to end.
+
+| Check | Result |
+|-------|--------|
+| `dpkg -i python3-flag-gems_5.0.2-1_amd64.deb` | installed to `/usr/lib/python3/dist-packages/flag_gems` |
+| `flag_gems.__file__` | `/usr/lib/python3/dist-packages/flag_gems/__init__.py` (the **deb** location, not source) |
+| `has_c_extension` | False |
+| small op on 780M | `DEB_FLAGGEMS_ON_AMD_OK` |
+
+The deb's `Depends` correctly declares `python3-numpy`, `python3-yaml`,
+`python3-sqlalchemy`, `python3-packaging` (dpkg lists them). It does
+**not** declare `python3-torch` (by design — the user supplies a
+backend-flavoured torch via pip; here ROCm torch from the container).
+Run it with:
+```sh
+docker run --rm --device=/dev/kfd --device=/dev/dri \
+  --group-add "$(getent group video|cut -d: -f3)" \
+  --group-add "$(getent group render|cut -d: -f3)" \
+  --security-opt seccomp=unconfined -e HSA_OVERRIDE_GFX_VERSION=11.0.0 \
+  -v /path/to/python3-flag-gems_*.deb:/deb/pkg.deb:ro \
+  -v "$PWD/deb-test.sh:/t.sh:ro" rocm/pytorch:latest bash /t.sh
+```
+
 ## Notes
 
-- `sqlalchemy` is required by FlagGems (operator-cache persistence) and
-  is not in the base image — `verify.sh` installs it. **The
-  `python3-flag-gems` deb must declare `sqlalchemy` (plus torch /
-  triton) in its dependencies**, or an installed-deb run fails the same
-  way.
-- This validates FlagGems' Python operators on AMD. It does **not**
-  exercise our `.deb` packaging or `libtriton_jit` — packaging a
-  FlagGems-on-AMD C++ path would first require an upstream ROCm/HIP
-  backend in `libtriton_jit` (separate assessment).
+- `sqlalchemy` / `numpy` / `pyyaml` aren't apt-installed in the
+  `rocm/pytorch` base image, so the scripts `pip install sqlalchemy`
+  (torch + triton come from the image). The `python3-flag-gems` deb
+  itself **does** declare these as deps — confirmed in the deb-test
+  above — so on a normal apt system they resolve.
+- This validates FlagGems' Python operators (and our noarch deb) on
+  AMD. It does **not** exercise `libtriton_jit` — a FlagGems-on-AMD
+  C++ path would first need an upstream ROCm/HIP backend in
+  `libtriton_jit` (see plan-tracking "AMD / ROCm direction").
