@@ -660,3 +660,41 @@ has a `_hygon` Python backend) and AMD MI-series: **one HIP backend
 serves both Hygon and AMD**. Decision is upstream's (issue to raise
 with the maintainer); this records the cost/value so it isn't
 re-derived.
+
+### AMD local-test surface + LLVM/triton reuse findings (2026-06-30)
+
+Verified on a real Radeon 780M (gfx1103). Repro: `docs/verification/flaggems-amd/`.
+
+**What the local AMD iGPU expands (and doesn't):**
+
+- Runtime-testable locally on AMD = the noarch Python components whose
+  *runtime* recognises AMD: **FlagGems, FlagTensor, FlagAttention
+  (incl. flash_attention), FlagSparse** — all run on the 780M. The
+  `python3-flag-gems` **deb** was dpkg-installed and run on the 780M
+  (first FlagOS package validated on real consumer AMD hardware).
+- **Not** AMD-ready: **FlagBLAS, FlagDNN** — their own `runtime`
+  device-detection has no AMD path (`RuntimeError: No device
+  detected`). noarch is necessary but not sufficient; the library
+  runtime must know AMD.
+- **No help for the nvidia-native tier**: `libtriton-jit-nvidia`,
+  `libflagfft-nvidia`, `flagtree-nvidia`, FlagGems C++ ext — these
+  need an NVIDIA card; the AMD iGPU can't validate them.
+- 780M caveat: gfx1103 needs `HSA_OVERRIDE_GFX_VERSION=11.0.0`; most
+  kernels run (flash_attention did), a specific FlagGems matmul-2048
+  hung. 880M (gfx1150) is native, no override.
+
+**LLVM / triton reuse (re: making a FlagTree build lighter):**
+
+- FlagTree's LLVM is a **prebuilt download** (`setup.py
+  get_llvm_package_info` fetches official LLVM static libs at the
+  pinned commit), not a from-source build. `LLVM_SYSPATH` can point at
+  an existing LLVM, but distro/release LLVM won't match Triton's
+  pinned-commit MLIR API — so "system LLVM" doesn't apply; the heavy
+  cost is compiling Triton, not LLVM.
+- triton cannot reuse `libtriton_jit` (wrong direction —
+  libtriton_jit imports triton). But **stock `triton-rocm` already
+  serves the AMD path** — the noarch smoke tests above ran on the
+  container's stock triton-rocm, no FlagTree build involved. A
+  `flagtree-amd` wheel is a *separate* artifact (FlagTree is a triton
+  fork), only needed if the FlagTree fork specifically is wanted on
+  AMD.
