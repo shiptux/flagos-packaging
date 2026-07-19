@@ -34,13 +34,24 @@ RELEASE_BASE="https://github.com/${GH_REPO}/releases/download/${RELEASE_TAG}"
 
 rm -rf "${OUT_DIR}"
 
-# For now, every distro gets the same RPM set. When per-distro variants
-# emerge (e.g. fedora-vs-el module dependencies), add a routing layer
-# in collect-artifacts that splits .rpms by target distro.
+# Route RPMs by dist tag:
+#   - openeuler<NN> dirs get ONLY .oe<NN>-tagged rpms — Fedora/EL noarch
+#     rpms bake in a foreign python(abi) + site-packages path and hard-fail
+#     on openEuler (see docs/verification/openeuler-2403/README.md, F3).
+#   - all other dirs keep the previous behavior (full non-.oe set) until
+#     per-distro builds exist for them too.
 for distro in ${DISTROS}; do
     arch_dir="${OUT_DIR}/${distro}/x86_64"
     mkdir -p "${arch_dir}"
-    find "${COLLECTED_DIR}" -name '*.rpm' -exec cp {} "${arch_dir}/" \;
+    case "${distro}" in
+        openeuler*)
+            oe_tag=".oe${distro#openeuler}"
+            find "${COLLECTED_DIR}" -name "*${oe_tag}.*.rpm" -exec cp {} "${arch_dir}/" \;
+            ;;
+        *)
+            find "${COLLECTED_DIR}" -name '*.rpm' ! -name '*.oe[0-9]*.rpm' -exec cp {} "${arch_dir}/" \;
+            ;;
+    esac
 
     if ! ls "${arch_dir}"/*.rpm >/dev/null 2>&1; then
         echo "WARN: no .rpm files for ${distro}; skipping" >&2
