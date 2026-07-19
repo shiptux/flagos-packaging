@@ -1,0 +1,13 @@
+name: flag-blas
+upstream: flagos-ai/FlagBLAS
+display_name: FlagBLAS
+workflows:
+  deb:
+    name: build-deb.yml
+    artifact_pattern: "flag-blas-*-packages"
+  rpm:
+    name: build-rpm.yml
+    artifact_pattern: "flag-blas-.*rpm-packages"
+notes: |
+  Pure-Python noarch package (python3-flag-blas). GEMM and BLAS-level
+  operators in Triton. Packaging branch pr/packaging on flagos-ai/FlagBLAS.

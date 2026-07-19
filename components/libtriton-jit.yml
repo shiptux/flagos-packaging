@@ -7,7 +7,7 @@ workflows:
     artifact_pattern: "libtriton-jit-*-packages"
   rpm:
     name: build-rpm.yml
-    artifact_pattern: "libtriton-jit-*-rpm-packages"
+    artifact_pattern: "libtriton-jit-.*rpm-packages"
 notes: |
   Native C++ runtime helper used by FlagTree's JIT compilation path.
   Architecture: amd64. Has its own dev split (libtriton-jit-dev for

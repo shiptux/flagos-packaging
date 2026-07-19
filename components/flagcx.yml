@@ -9,7 +9,7 @@ workflows:
     artifact_pattern: "flagcx-nvidia-packages"
   rpm:
     name: build-rpm.yml
-    artifact_pattern: "flagcx-nvidia-rpm-packages"
+    artifact_pattern: "flagcx-nvidia.*rpm-packages"
 notes: |
   Upstream produces three backends: nvidia, metax, ascend. For W2 we
   publish only nvidia (single-chain policy, see docs/single-chain-policy.md).

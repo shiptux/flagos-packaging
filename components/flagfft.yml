@@ -1,0 +1,25 @@
+name: flagfft
+upstream: flagos-ai/FlagFFT
+display_name: FlagFFT
+workflows:
+  deb:
+    # No upstream build-deb.yml yet — local container build only.
+    # Add the workflow filename here once FlagFFT's PR has CI wired.
+    name: build-deb.yml
+    artifact_pattern: "libflagfft-nvidia-packages"
+  rpm:
+    name: build-rpm.yml
+    artifact_pattern: "libflagfft-nvidia.*rpm-packages"
+notes: |
+  C++ FFT library; single backend (NVIDIA) for now — upstream CMake
+  FATAL_ERRORs unless FLAGFFT_LIBTRITON_JIT_BACKEND=CUDA. Produces
+  libflagfft-nvidia + libflagfft-nvidia-dev.
+
+  Bundled libtriton_jit submodule is statically linked into
+  libflagfft.so (TRITON_JIT_INSTALL=OFF in CMakeLists), so no runtime
+  dependency on libtriton-jit.deb. Build container must pip-install
+  torch/triton/pybind11 because the bundled libtriton_jit build needs
+  them.
+
+  Packaging branch pr/packaging committed 2026-05-21 on FlagFFT main;
+  no upstream PR opened yet.

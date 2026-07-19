@@ -7,7 +7,7 @@ workflows:
     artifact_pattern: "flagscale-*-packages"
   rpm:
     name: build-rpm.yml
-    artifact_pattern: "flagscale-*-rpm-packages"
+    artifact_pattern: "flagscale-.*rpm-packages"
 notes: |
   Pure Python (Architecture: all). Packaging branch pr/packaging committed
   2026-04-26 (commit c0be689); upstream PR not yet opened, so the

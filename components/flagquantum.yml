@@ -1,0 +1,15 @@
+name: flagquantum
+upstream: flagos-ai/FlagQuantum
+display_name: FlagQuantum
+workflows:
+  deb:
+    name: build-deb.yml
+    artifact_pattern: "flagquantum-*-packages"
+  rpm:
+    name: build-rpm.yml
+    artifact_pattern: "flagquantum-.*rpm-packages"
+notes: |
+  Pure-Python noarch package (python3-flagquantum). Distributed
+  quantum statevector simulator. Packaging branch pr/packaging on
+  flagos-ai/FlagQuantum. Not in the official FlagOS component list as
+  of 2026-05-21 but actively maintained upstream.

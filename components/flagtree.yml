@@ -8,7 +8,7 @@ workflows:
     artifact_pattern: "flagtree-nvidia-packages"
   rpm:
     name: build-rpm.yml
-    artifact_pattern: "flagtree-nvidia-rpm-packages"
+    artifact_pattern: "flagtree-nvidia.*rpm-packages"
 notes: |
   FlagTree is the highest-fan-out component: 12 backends upstream, each
   with its own Triton version + LLVM hash. W2 publishes nvidia only

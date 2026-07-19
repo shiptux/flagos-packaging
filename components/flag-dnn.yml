@@ -1,0 +1,13 @@
+name: flag-dnn
+upstream: flagos-ai/FlagDNN
+display_name: FlagDNN
+workflows:
+  deb:
+    name: build-deb.yml
+    artifact_pattern: "flag-dnn-*-packages"
+  rpm:
+    name: build-rpm.yml
+    artifact_pattern: "flag-dnn-.*rpm-packages"
+notes: |
+  Pure-Python noarch package (python3-flag-dnn). Multi-backend DNN
+  operators. Packaging branch pr/packaging on flagos-ai/FlagDNN.

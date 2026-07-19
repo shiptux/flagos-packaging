@@ -1,0 +1,13 @@
+name: flagtensor
+upstream: flagos-ai/FlagTensor
+display_name: FlagTensor
+workflows:
+  deb:
+    name: build-deb.yml
+    artifact_pattern: "flagtensor-*-packages"
+  rpm:
+    name: build-rpm.yml
+    artifact_pattern: "flagtensor-.*rpm-packages"
+notes: |
+  Pure-Python noarch package (python3-flagtensor). High-performance
+  tensor operators. Packaging branch pr/packaging on flagos-ai/FlagTensor.

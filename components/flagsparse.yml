@@ -1,0 +1,17 @@
+name: flagsparse
+upstream: flagos-ai/FlagSparse
+display_name: FlagSparse
+workflows:
+  deb:
+    name: build-deb.yml
+    artifact_pattern: "flagsparse-amd64-packages"
+  rpm:
+    name: build-rpm.yml
+    # Matches both flagsparse-amd64-rpm-packages (fedora43) and
+    # flagsparse-amd64-oe2403-rpm-packages (openEuler 24.03).
+    artifact_pattern: "flagsparse-.*rpm-packages"
+notes: |
+  Pure-Python noarch, no external deps — the simplest component and
+  the template for the openEuler 24.03 build matrix (upstream PR #29,
+  merged 2026-07-15). Was collected manually during the sandbox
+  bootstrap; this manifest brings it into the normal collect matrix.

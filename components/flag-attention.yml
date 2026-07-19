@@ -1,0 +1,14 @@
+name: flag-attention
+upstream: flagos-ai/FlagAttention
+display_name: FlagAttention
+workflows:
+  deb:
+    name: build-deb.yml
+    artifact_pattern: "flag-attention-*-packages"
+  rpm:
+    name: build-rpm.yml
+    artifact_pattern: "flag-attention-.*rpm-packages"
+notes: |
+  Pure-Python noarch package (python3-flag-attention). Triton-based
+  attention operators; Recommends python3-torch + python3-triton.
+  Packaging branch pr/packaging on flagos-ai/FlagAttention.
