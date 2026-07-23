@@ -232,6 +232,34 @@ proven to install on openEuler (currently the FlagSparse set; grows
 as upstream openEuler PRs merge) instead of the uninstallable
 Fedora-built copies.
 
+## Update 2026-07-23 — live end-to-end PASS
+
+Publish run [29976833365](https://github.com/shiptux/flagos-packaging/actions/runs/29976833365)
+(release `v2026.07.23`) with the routing + per-distro `.repo` fixes.
+Fresh `openeuler/openeuler:24.03-lts` container, exact documented
+user flow:
+
+```sh
+curl -fsSL .../flagos-openeuler2403.repo -o /etc/yum.repos.d/flagos.repo
+dnf makecache -y
+dnf install -y python3-flagsparse python3-flag-attention python3-flagtree-nvidia
+```
+
+All three install from GitHub Releases (89 MB) and pass import
+checks: `import flagsparse` ✓, `find_spec('flag_attn')` ✓,
+`import triton` → 3.6.0 ✓. The repo lists exactly the `.oe2403`
+set. flag-attention / flagtree binaries currently come from their
+open PRs' CI runs (#35 / #794); they stabilize once merged.
+
+Publish-side regression found and fixed along the way: flagtree
+0.6.0's **deb** grew to 240 MB (> gh-pages 100 MB cap) and killed
+the first publish; `build-apt-repo.sh` now skips oversized debs
+with a CI warning (flagtree temporarily absent from APT; a
+Releases-based flat repo is the proper fix, tracked as follow-up).
+
+Remaining for the month goal: hardware (GPU) smoke test — kernels
+can't run in containers.
+
 ## Repro
 
 ```sh
