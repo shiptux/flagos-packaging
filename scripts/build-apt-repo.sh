@@ -36,10 +36,19 @@ mkdir -p "${OUT_DIR}/conf"
 
 sed "s|@GPG_KEY_ID@|${GPG_KEY_ID}|g" "${TMPL}" > "${OUT_DIR}/conf/distributions"
 
-# Add every collected .deb to the stable distribution. reprepro signs
-# the Release file itself when SignWith: is set in the distributions
-# config, so we don't need to manually re-sign here.
-find "${COLLECTED_DIR}" -name '*.deb' -print0 | \
+# gh-pages rejects files over 100 MB, and pool/ ships to gh-pages
+# (see design note above). Skip oversized .debs with a loud warning
+# instead of failing the whole publish — serving big packages needs a
+# Releases-based flat-repo route, not yet implemented.
+DEB_SIZE_CAP="${DEB_SIZE_CAP:-95M}"
+find "${COLLECTED_DIR}" -name '*.deb' -size "+${DEB_SIZE_CAP}" | while read -r deb; do
+    echo "::warning::skipping $(basename "${deb}") ($(du -h "${deb}" | cut -f1)) — exceeds ${DEB_SIZE_CAP} gh-pages cap, not indexed in APT" >&2
+done
+
+# Add every remaining collected .deb to the stable distribution.
+# reprepro signs the Release file itself when SignWith: is set in the
+# distributions config, so we don't need to manually re-sign here.
+find "${COLLECTED_DIR}" -name '*.deb' ! -size "+${DEB_SIZE_CAP}" -print0 | \
     xargs -0 -r reprepro -b "${OUT_DIR}" includedeb stable
 
 PACKAGES="${OUT_DIR}/dists/stable/main/binary-amd64/Packages"
