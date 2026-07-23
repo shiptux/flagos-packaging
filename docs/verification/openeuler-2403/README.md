@@ -260,6 +260,39 @@ Releases-based flat repo is the proper fix, tracked as follow-up).
 Remaining for the month goal: hardware (GPU) smoke test — kernels
 can't run in containers.
 
+## Update 2026-07-26 — AOT compile smoke PASS (no GPU required)
+
+The deepest verification possible without NVIDIA hardware: in a fresh
+openEuler 24.03 container with `python3-flagtree-nvidia` (0.6.0,
+cp311) installed from the live repo, `triton.compile` AOT-compiled a
+vector-add kernel for `GPUTarget("cuda", 80, 32)` with **no GPU and
+no driver present**:
+
+```
+stages: ['source', 'ttir', 'ttgir', 'llir', 'ptx', 'cubin']
+ptx header: ['.version 8.7', '.target sm_80']
+AOT SMOKE PASS
+```
+
+Note `cubin` in the stages: the wheel's bundled `ptxas` executed too,
+so the full chain — frontend → TTIR → TTGIR → LLVM IR → PTX → cubin —
+works on openEuler. Remaining untested surface is only the
+driver-interaction layer (allocation, launch), which requires a real
+device. Script: `gpu-smoke/aot_smoke.py`.
+
+For that last layer, `gpu-smoke/` contains a self-contained
+Dockerfile for locked-down NVIDIA environments (host driver +
+nvidia-container-toolkit are the only requirements):
+
+```sh
+docker build -t flagos-oe-gpu-smoke docs/verification/openeuler-2403/gpu-smoke/
+docker run --rm --gpus all flagos-oe-gpu-smoke
+# expected tail: GPU SMOKE PASS <device name>
+```
+
+It runs the AOT stage, then a real on-device vector-add (result
+checked), then a best-effort `flag_attn.flash_attention` call.
+
 ## Repro
 
 ```sh
