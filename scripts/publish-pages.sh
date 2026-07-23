@@ -5,7 +5,7 @@
 #   /pubkey.gpg                              (the signing key, public)
 #   /apt/dists/stable/...                    (APT metadata, no binaries)
 #   /rpm/<distro>/x86_64/repodata/...        (YUM metadata, no binaries)
-#   /flagos.repo                             (template .repo file for dnf)
+#   /flagos-<distro>.repo                    (per-distro .repo files for dnf)
 #   /index.html                              (small landing page)
 #
 # Env:
@@ -33,24 +33,80 @@ mkdir -p "${STAGING}/apt" "${STAGING}/rpm"
 [ -d "${YUM_DIR}" ] && cp -a "${YUM_DIR}/." "${STAGING}/rpm/"
 cp "${GPG_PUBLIC_KEY}" "${STAGING}/pubkey.gpg"  # required for apt-key
 
-# .repo template, expanded with the actual Pages URL
+# Per-distro .repo files, one per rpm/<distro>/ directory, with the
+# baseurl hardcoded. (A single $releasever-style .repo can't work:
+# no dnf defines a variable that maps to our distro slugs, and e.g.
+# openEuler's $releasever is "24.03LTS".)
 PAGES_BASE="https://${GH_REPO%%/*}.github.io/${GH_REPO##*/}"
-sed "s|@PAGES_BASE@|${PAGES_BASE}|g" "${REPO_ROOT}/config/yum-repo.tmpl" > "${STAGING}/flagos.repo"
+YUM_DISTROS=""
+for d in "${STAGING}"/rpm/*/; do
+    [ -d "${d}" ] || continue
+    distro="$(basename "${d}")"
+    YUM_DISTROS="${YUM_DISTROS} ${distro}"
+    sed -e "s|@PAGES_BASE@|${PAGES_BASE}|g" -e "s|@DISTRO@|${distro}|g" \
+        "${REPO_ROOT}/config/yum-repo.tmpl" > "${STAGING}/flagos-${distro}.repo"
+done
 
-# Tiny landing page
+# Landing page with copy-pasteable quickstart blocks
 cat > "${STAGING}/index.html" <<HTML
 <!doctype html>
-<html><head><meta charset="utf-8"><title>FlagOS Packaging</title></head>
+<html><head><meta charset="utf-8"><title>FlagOS Packaging</title>
+<style>
+body { font-family: system-ui, -apple-system, sans-serif; max-width: 760px; margin: 2em auto; padding: 0 1em; line-height: 1.5; color: #222; }
+h1 { margin-top: 0; }
+h2 { margin-top: 1.6em; border-bottom: 1px solid #eee; padding-bottom: .2em; }
+pre { background: #f6f8fa; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 0.95em; }
+ul.files { padding-left: 1.2em; }
+ul.files li { margin: .2em 0; }
+a { color: #0969da; }
+.note { background: #fff8c5; border-left: 4px solid #d4a72c; padding: .6em .9em; border-radius: 4px; }
+</style>
+</head>
 <body>
 <h1>FlagOS Packaging</h1>
 <p>APT and YUM repositories for the FlagOS software stack.</p>
-<ul>
-<li><a href="apt/">APT (Debian/Ubuntu)</a></li>
-<li><a href="rpm/">YUM (Fedora/RHEL/OpenEuler/...)</a></li>
-<li><a href="pubkey.gpg">GPG public key</a></li>
-<li><a href="flagos.repo">flagos.repo (for dnf config-manager)</a></li>
+
+<p class="note">This endpoint is a <b>sandbox</b> at
+<code>${PAGES_BASE}</code>. The production endpoint is planned at
+<code>https://flagos-ai.github.io/flagos-packaging</code>; both
+serve the same package set during the migration period.</p>
+
+<h2>Ubuntu / Debian</h2>
+<pre><code>sudo install -d -m 0755 /etc/apt/keyrings
+curl -fsSL ${PAGES_BASE}/pubkey.gpg | \\
+  sudo gpg --dearmor -o /etc/apt/keyrings/flagos.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/flagos.gpg] \\
+  ${PAGES_BASE}/apt stable main" | \\
+  sudo tee /etc/apt/sources.list.d/flagos.list
+
+sudo apt update
+sudo apt install libflagcx-nvidia python3-flagscale python3-flagtree-nvidia</code></pre>
+
+<h2>Fedora / Rocky / OpenEuler / OpenCloudOS / OpenAnolis</h2>
+<p>Pick the .repo file matching your distro
+(available:<code>${YUM_DISTROS}</code>):</p>
+<pre><code>sudo curl -fsSL ${PAGES_BASE}/flagos-&lt;distro&gt;.repo \\
+  -o /etc/yum.repos.d/flagos.repo
+
+sudo dnf makecache -y   # imports the FlagOS signing key
+sudo dnf install libflagcx-nvidia python3-flagscale python3-flagtree-nvidia</code></pre>
+<p>e.g. <code>flagos-openeuler2403.repo</code> for openEuler 24.03,
+<code>flagos-fedora43.repo</code> for Fedora 43. The curl form works on
+both dnf4 and dnf5 and needs no <code>dnf-plugins-core</code>.</p>
+
+<h2>Available files</h2>
+<ul class="files">
+<li><a href="apt/">apt/</a> — APT repository (Debian/Ubuntu)</li>
+<li><a href="rpm/">rpm/</a> — YUM repository (Fedora/RHEL/OpenEuler/...)</li>
+<li><a href="pubkey.gpg">pubkey.gpg</a> — GPG signing public key</li>
+<li><code>flagos-&lt;distro&gt;.repo</code> — per-distro dnf repo files (see above)</li>
 </ul>
-<p>See <a href="https://github.com/${GH_REPO}/blob/main/docs/install.md">install instructions</a>.</p>
+
+<p>Full guide: <a href="https://github.com/${GH_REPO}/blob/main/docs/install.md">install.md</a>
+(<a href="https://github.com/${GH_REPO}/blob/main/docs/install_cn.md">中文</a>).
+Compatibility matrix: <a href="https://github.com/${GH_REPO}/blob/main/docs/compatibility-status.md">docs/compatibility-status.md</a>.</p>
 </body></html>
 HTML
 
