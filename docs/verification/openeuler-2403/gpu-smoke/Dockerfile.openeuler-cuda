@@ -1,0 +1,50 @@
+# GPU smoke image on the openEuler CUDA base (CUDA 13 toolkit, oe2403 LTS).
+#
+# Same smoke as ./Dockerfile but on openeuler/cuda — closer to a real AI
+# environment and usable on platforms that expect a CUDA-flavored image.
+# The host still provides the driver via nvidia-container-toolkit
+# (--gpus all or the platform's injection); the CUDA 13 toolkit inside is
+# NOT used by the python smoke (torch bundles its own CUDA runtime,
+# flagtree bundles ptxas) but is there for follow-up C++ tests.
+#
+#   docker build -f Dockerfile.openeuler-cuda -t flagos-oe-gpu-smoke .
+#   docker run --rm --gpus all flagos-oe-gpu-smoke
+#   # expected tail: GPU SMOKE PASS <device name>
+#
+# Restricted/CN-network toggles:
+#   --build-arg OE_MIRROR=https://mirrors.aliyun.com/openeuler
+#   --build-arg PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple
+#
+# For interactive/platform use, start sshd instead of the smoke:
+#   docker run -d --gpus all -p 2222:22 flagos-oe-gpu-smoke /usr/sbin/sshd -D
+
+FROM openeuler/cuda:13.0.0-oe2403lts
+
+ARG OE_MIRROR=
+RUN if [ -n "${OE_MIRROR}" ]; then \
+        sed -i "s|http://repo.openeuler.org|${OE_MIRROR}|g" \
+            /etc/yum.repos.d/*.repo; \
+    fi
+
+RUN curl -fsSL https://shiptux.github.io/flagos-packaging/flagos-openeuler2403.repo \
+        -o /etc/yum.repos.d/flagos.repo \
+    && dnf makecache -y \
+    && dnf install -y \
+        python3-flagtree-nvidia python3-pip \
+        openssh-server tzdata \
+    && (dnf install -y python3-flag-attention \
+        || echo "WARN: python3-flag-attention not in repo right now (un-merged upstream PR artifacts expire after 7 days); flag_attn check will be skipped") \
+    && ssh-keygen -A \
+    && mkdir -p /run/sshd \
+    && dnf clean all
+
+# torch pip wheel bundles the CUDA 12.x runtime, so only the host driver
+# is needed at run time regardless of the image's CUDA 13 toolkit.
+ARG PIP_INDEX_URL=https://pypi.org/simple
+ARG TORCH_SPEC=torch
+RUN python3 -m pip install --no-cache-dir --index-url "${PIP_INDEX_URL}" "${TORCH_SPEC}"
+
+COPY aot_smoke.py gpu_smoke.py /smoke/
+
+# AOT compile chain first (no GPU needed), then real kernel execution.
+CMD ["bash", "-c", "python3 /smoke/aot_smoke.py && python3 /smoke/gpu_smoke.py"]

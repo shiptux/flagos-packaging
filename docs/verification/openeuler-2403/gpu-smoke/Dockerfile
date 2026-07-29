@@ -18,7 +18,9 @@ FROM openeuler/openeuler:24.03-lts
 RUN curl -fsSL https://shiptux.github.io/flagos-packaging/flagos-openeuler2403.repo \
         -o /etc/yum.repos.d/flagos.repo \
     && dnf makecache -y \
-    && dnf install -y python3-flagtree-nvidia python3-flag-attention python3-pip \
+    && dnf install -y python3-flagtree-nvidia python3-pip \
+    && (dnf install -y python3-flag-attention \
+        || echo "WARN: python3-flag-attention not in repo right now (un-merged upstream PR artifacts expire after 7 days); flag_attn check will be skipped") \
     && dnf clean all
 
 # torch pip wheel bundles CUDA libs (~3 GB). Override the index for

@@ -293,6 +293,23 @@ docker run --rm --gpus all flagos-oe-gpu-smoke
 It runs the AOT stage, then a real on-device vector-add (result
 checked), then a best-effort `flag_attn.flash_attention` call.
 
+`Dockerfile.openeuler-cuda` is the same smoke on
+`openeuler/cuda:13.0.0-oe2403lts` (CUDA-flavored base for platforms
+that expect one; adds sshd + `OE_MIRROR`/`PIP_INDEX_URL` build args
+for restricted/CN networks). Locally validated 2026-07-27: image
+builds, AOT stage passes inside it, GPU stage stops exactly at
+"no CUDA device visible" on a GPU-less host. Note the image's CUDA 13
+toolkit provides `libcudart.so.13` — the future `libflagcx-nvidia`
+openEuler rebuild needs `.so.12` or a cuda13-linked build (tracked).
+
+**Operational fragility (observed 2026-07-26):** packages whose
+binaries come from un-merged upstream PRs drop out of the repo when
+those CI artifacts expire (7-day retention) and the weekly publish
+re-collects — flag-attention vanished exactly this way; the smoke
+Dockerfiles therefore install it opportunistically. The durable fix
+is merging the upstream PRs (#35, #794) so default-branch builds
+keep artifacts fresh.
+
 ## Repro
 
 ```sh
