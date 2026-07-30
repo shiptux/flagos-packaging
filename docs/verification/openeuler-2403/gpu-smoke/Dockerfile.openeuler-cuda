@@ -1,27 +1,40 @@
-# GPU smoke image on the openEuler CUDA base (CUDA 13 toolkit, oe2403 LTS).
+# FlagOS openEuler 24.03 GPU test environment — sshd-based.
 #
-# Same smoke as ./Dockerfile but on openeuler/cuda — closer to a real AI
-# environment and usable on platforms that expect a CUDA-flavored image.
-# The host still provides the driver via nvidia-container-toolkit
-# (--gpus all or the platform's injection); the CUDA 13 toolkit inside is
-# NOT used by the python smoke (torch bundles its own CUDA runtime,
-# flagtree bundles ptxas) but is there for follow-up C++ tests.
+# Unlike ./Dockerfile (one-shot smoke), this builds a long-running
+# environment image: FlagOS packages + torch preinstalled, sshd as the
+# default command. SSH in and run whatever tests you need.
 #
-#   docker build -f Dockerfile.openeuler-cuda -t flagos-oe-gpu-smoke .
-#   docker run --rm --gpus all flagos-oe-gpu-smoke
-#   # expected tail: GPU SMOKE PASS <device name>
+# Build (pick a reachable base; hub.oepkgs.net is openEuler's own
+# registry and works from CN networks):
 #
-# Restricted/CN-network toggles:
+#   docker build -f Dockerfile.openeuler-cuda -t flagos-oe-env \
+#     --build-arg BASE_IMAGE=hub.oepkgs.net/openeuler/cuda:13.0.0-oe2403lts \
+#     --build-arg ROOT_PASSWORD=changeme .
+#
+# Run + connect:
+#
+#   docker run -d --gpus all -p 2222:22 --name flagos-oe-env flagos-oe-env
+#   ssh -p 2222 root@<host>
+#
+# Inside, the smoke scripts are at /smoke:
+#
+#   python3 /smoke/aot_smoke.py     # compile chain, no GPU needed
+#   python3 /smoke/gpu_smoke.py     # real kernel execution on the device
+#
+# Login setup (either or both; NOTE build args persist in image
+# history — fine for throwaway internal test images only):
+#   --build-arg ROOT_PASSWORD=...                     password login
+#   --build-arg SSH_PUBKEY="ssh-ed25519 AAAA... you"  key login
+#
+# Network toggles for restricted/CN environments:
 #   --build-arg OE_MIRROR=https://mirrors.aliyun.com/openeuler
 #   --build-arg PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple
 #
-# For interactive/platform use, start sshd instead of the smoke:
-#   docker run -d --gpus all -p 2222:22 flagos-oe-gpu-smoke /usr/sbin/sshd -D
+# The CUDA 13 toolkit inside is NOT used by the python smoke (torch
+# bundles its own CUDA runtime, flagtree bundles ptxas) but is there
+# for follow-up C++ tests. The host still provides the driver via
+# nvidia-container-toolkit (--gpus all or the platform's injection).
 
-# Default pulls from Docker Hub; in CN / restricted networks use the
-# openEuler-official oepkgs registry mirror of the same image:
-#   --build-arg BASE_IMAGE=hub.oepkgs.net/openeuler/cuda:13.0.0-oe2403lts
-# or whatever name your platform assigns after importing it.
 ARG BASE_IMAGE=openeuler/cuda:13.0.0-oe2403lts
 FROM ${BASE_IMAGE}
 
@@ -36,9 +49,9 @@ RUN curl -fsSL https://shiptux.github.io/flagos-packaging/flagos-openeuler2403.r
     && dnf makecache -y \
     && dnf install -y \
         python3-flagtree-nvidia python3-pip \
-        openssh-server tzdata \
+        openssh-server tzdata vim-minimal \
     && (dnf install -y python3-flag-attention \
-        || echo "WARN: python3-flag-attention not in repo right now (un-merged upstream PR artifacts expire after 7 days); flag_attn check will be skipped") \
+        || echo "WARN: python3-flag-attention not in repo right now (un-merged upstream PR artifacts expire after 7 days)") \
     && ssh-keygen -A \
     && mkdir -p /run/sshd \
     && dnf clean all
@@ -49,7 +62,29 @@ ARG PIP_INDEX_URL=https://pypi.org/simple
 ARG TORCH_SPEC=torch
 RUN python3 -m pip install --no-cache-dir --index-url "${PIP_INDEX_URL}" "${TORCH_SPEC}"
 
-COPY aot_smoke.py gpu_smoke.py /smoke/
+# No COPY: web-managed build backends have no local context. Fetch the
+# smoke scripts from the repo instead; best-effort so an unreachable
+# raw.githubusercontent.com doesn't fail the build (scp them in later
+# if needed).
+ARG SMOKE_RAW_BASE=https://raw.githubusercontent.com/shiptux/flagos-packaging/main/docs/verification/openeuler-2403/gpu-smoke
+RUN mkdir -p /smoke \
+    && (curl -fsSL "${SMOKE_RAW_BASE}/aot_smoke.py" -o /smoke/aot_smoke.py \
+        && curl -fsSL "${SMOKE_RAW_BASE}/gpu_smoke.py" -o /smoke/gpu_smoke.py \
+        || echo "WARN: could not fetch smoke scripts; scp them into /smoke later")
 
-# AOT compile chain first (no GPU needed), then real kernel execution.
-CMD ["bash", "-c", "python3 /smoke/aot_smoke.py && python3 /smoke/gpu_smoke.py"]
+ARG ROOT_PASSWORD=
+ARG SSH_PUBKEY=
+RUN if [ -n "${ROOT_PASSWORD}" ]; then \
+        echo "root:${ROOT_PASSWORD}" | chpasswd; \
+    fi \
+    && if [ -n "${SSH_PUBKEY}" ]; then \
+        mkdir -p /root/.ssh && chmod 700 /root/.ssh \
+        && echo "${SSH_PUBKEY}" >> /root/.ssh/authorized_keys \
+        && chmod 600 /root/.ssh/authorized_keys; \
+    fi \
+    && sed -i -e 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' \
+              -e 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' \
+        /etc/ssh/sshd_config
+
+EXPOSE 22
+CMD ["/usr/sbin/sshd", "-D", "-e"]

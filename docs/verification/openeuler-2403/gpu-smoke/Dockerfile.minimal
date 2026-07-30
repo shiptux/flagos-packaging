@@ -1,0 +1,36 @@
+# Minimal sshd environment image for web-managed build backends
+# (no local context, no build args — edit lines directly).
+#
+# 1. Replace FROM with your platform's imported reference of
+#    openeuler/cuda:13.0.0-oe2403lts
+#    (public sources: docker.io/openeuler/cuda:13.0.0-oe2403lts,
+#     hub.oepkgs.net/openeuler/cuda:13.0.0-oe2403lts)
+# 2. If the platform doesn't inject ssh credentials, add after ssh-keygen:
+#        && echo "root:<password>" | chpasswd \
+#    and set PermitRootLogin/PasswordAuthentication in /etc/ssh/sshd_config.
+# 3. Once inside, fetch and run the smoke:
+#    curl -fsSLO https://raw.githubusercontent.com/shiptux/flagos-packaging/main/docs/verification/openeuler-2403/gpu-smoke/aot_smoke.py
+#    curl -fsSLO https://raw.githubusercontent.com/shiptux/flagos-packaging/main/docs/verification/openeuler-2403/gpu-smoke/gpu_smoke.py
+#    python3 aot_smoke.py && python3 gpu_smoke.py
+#
+# Build-time egress needed: mirrors.aliyun.com (dnf/pip),
+# shiptux.github.io (repo metadata), github.com (RPM binaries).
+# If the torch layer (~2.5 GB) hits platform build timeouts, drop that
+# RUN and pip-install after ssh'ing in.
+
+FROM openeuler/cuda:13.0.0-oe2403lts
+
+RUN sed -i "s|http://repo.openeuler.org|https://mirrors.aliyun.com/openeuler|g" /etc/yum.repos.d/*.repo \
+    && curl -fsSL https://shiptux.github.io/flagos-packaging/flagos-openeuler2403.repo \
+        -o /etc/yum.repos.d/flagos.repo \
+    && dnf install -y --setopt=install_weak_deps=False \
+        tzdata openssh-server git \
+        python3-flagtree-nvidia python3-pip \
+    && ssh-keygen -A \
+    && mkdir -p /run/sshd \
+    && dnf clean all
+
+RUN python3 -m pip install --no-cache-dir \
+        -i https://mirrors.aliyun.com/pypi/simple torch
+
+CMD ["/usr/sbin/sshd", "-D"]
