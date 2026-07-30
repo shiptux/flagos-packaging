@@ -24,11 +24,17 @@ RUN sed -i "s|http://repo.openeuler.org|https://mirrors.aliyun.com/openeuler|g" 
     && curl -fsSL https://shiptux.github.io/flagos-packaging/flagos-openeuler2403.repo \
         -o /etc/yum.repos.d/flagos.repo \
     && dnf install -y --setopt=install_weak_deps=False \
-        tzdata openssh-server git \
+        tzdata openssh-server initscripts git \
         python3-flagtree-nvidia python3-pip \
     && ssh-keygen -A \
     && mkdir -p /run/sshd \
     && dnf clean all
+
+# Debian-style compat shim: some platforms probe/start sshd via
+# "service ssh start" or /etc/init.d/ssh, which rpm distros don't have.
+RUN printf '#!/bin/sh\ncase "$1" in\n  start|restart) mkdir -p /run/sshd; exec /usr/sbin/sshd ;;\n  stop) pkill -x sshd ;;\nesac\nexit 0\n' > /etc/init.d/ssh \
+    && chmod +x /etc/init.d/ssh \
+    && ln -sf /etc/init.d/ssh /etc/init.d/sshd
 
 RUN python3 -m pip install --no-cache-dir \
         -i https://mirrors.aliyun.com/pypi/simple torch
