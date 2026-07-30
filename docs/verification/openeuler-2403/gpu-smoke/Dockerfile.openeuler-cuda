@@ -18,7 +18,12 @@
 # For interactive/platform use, start sshd instead of the smoke:
 #   docker run -d --gpus all -p 2222:22 flagos-oe-gpu-smoke /usr/sbin/sshd -D
 
-FROM openeuler/cuda:13.0.0-oe2403lts
+# Default pulls from Docker Hub; in CN / restricted networks use the
+# openEuler-official oepkgs registry mirror of the same image:
+#   --build-arg BASE_IMAGE=hub.oepkgs.net/openeuler/cuda:13.0.0-oe2403lts
+# or whatever name your platform assigns after importing it.
+ARG BASE_IMAGE=openeuler/cuda:13.0.0-oe2403lts
+FROM ${BASE_IMAGE}
 
 ARG OE_MIRROR=
 RUN if [ -n "${OE_MIRROR}" ]; then \
