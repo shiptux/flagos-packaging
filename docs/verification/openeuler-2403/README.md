@@ -349,6 +349,59 @@ New findings:
 With this, the month goal — openEuler 24.03 installable AND runnable
 — is fully closed for the python-side stack.
 
+## Update 2026-07-31 (later) — FlagCX CUDA 12 rebuild PASS on A100
+
+First C++ component rebuilt natively on the openEuler 24.03 GPU
+container and executed on the A100: `libflagcx.so` (nvidia backend,
+20 MB) built from main, and `perf_allreduce` ran through the full
+stack (MPI bootstrap → comm init → device path), e.g. 16 MB
+allreduce at ~670 GB/s algo bandwidth (single rank).
+
+**The CUDA 12 toolchain recipe** (no NVIDIA repo exists for
+openEuler; GitHub CDN unreachable from the platform — everything
+below comes from the aliyun PyPI mirror + openEuler repos):
+
+```sh
+pip install nvidia-cuda-runtime-cu12 nvidia-cuda-nvcc-cu12 \
+            nvidia-nccl-cu12 nvidia-cuda-cccl-cu12   # aliyun mirror
+# Assemble a toolkit-like prefix (pip splits headers across wheels):
+#   /opt/cuda12/include  = cuda_runtime/include/* + cuda_nvcc/include/*
+#                          (crt/host_config.h lives in the NVCC wheel!)
+#                          + cccl -> cuda_cccl/include
+#   /opt/cuda12/lib64    = cudart libs (+ libcudart.so symlink)
+#                          + libcuda.so -> the DRIVER library
+#   /opt/nccl12          = include,lib -> nccl wheel dirs (+ libnccl.so)
+dnf install nlohmann-json-devel openmpi openmpi-devel  # BuildRequires
+make USE_NVIDIA=1 DEVICE_HOME=/opt/cuda12 CCL_HOME=/opt/nccl12 -j8
+```
+
+Gotchas captured for the future spec / CI job:
+
+- `COMPILE_KERNEL=0` (default) means **no nvcc needed** — pure gcc
+  against CUDA headers, linking `-lcudart -lcuda -lnccl`. (The pip
+  nvcc wheel from aliyun only contained ptxas anyway.)
+- The platform injects the NVIDIA driver at the **Debian path**
+  (`/usr/lib/x86_64-linux-gnu/libcuda.so.1`) even inside an openEuler
+  container — the bind-mount mirrors the Ubuntu host. Symlink
+  accordingly, don't assume `/usr/lib64`.
+- openEuler 24.03 provides `nlohmann-json-devel` in main repos
+  (FlagCX BuildRequires; ubuntu22.04 needed a source fetch — nicer
+  here).
+- Test binaries need `-Wl,-rpath-link` for the transitive
+  `libcudart.so.12` dependency; plain `-L`/`LIBRARY_PATH` doesn't
+  apply to indirect deps.
+- openEuler's openmpi splits layout (`/usr/include/openmpi-x86_64`,
+  `/usr/lib64/openmpi/lib`, binaries in `/usr/bin`); FlagCX's
+  `MPI_HOME` expects a single prefix — fabricate one with symlinks.
+- Leftover pip deps warning: the earlier cu13 torch install left
+  `nvidia-cuda-runtime` (13.x) sharing the same `nvidia/cuda_runtime`
+  install dir as the cu12 wheel — pin/inspect versions when both
+  might be present.
+
+Next: turn this recipe into `packaging/rpm` openEuler support in
+FlagCX upstream (spec BuildRequires + build container prep), then
+libtriton-jit (needs libtorch) and flagfft.
+
 ## Repro
 
 ```sh
