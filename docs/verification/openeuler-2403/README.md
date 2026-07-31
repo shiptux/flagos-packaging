@@ -310,6 +310,45 @@ Dockerfiles therefore install it opportunistically. The durable fix
 is merging the upstream PRs (#35, #794) so default-branch builds
 keep artifacts fresh.
 
+## Update 2026-07-31 — HARDWARE GPU SMOKE PASS (A100) 🎯
+
+Final acceptance on real hardware: BAAI platform container
+(openEuler 24.03 LTS, NVIDIA A100-SXM4-40GB, driver 535.161 /
+CUDA 12.2, Python 3.11.6):
+
+```
+AOT SMOKE PASS                       (full chain incl. cubin, sm_80)
+triton vector-add on device: OK      (result verified)
+GPU SMOKE PASS NVIDIA A100-SXM4-40GB
+```
+
+Install route: platform runtime egress reaches shiptux.github.io
+fine but the GitHub release-asset CDN crawls (<1 KB/s), so the 87 MB
+RPM was streamed over ssh stdin and installed as a local file;
+torch 2.5.1+cu124 from the aliyun PyPI mirror (host driver is
+CUDA 12.2 — cu13x wheels hard-fail on it).
+
+New findings:
+
+- **F11 — flagtree RPM lacks runtime-JIT dependencies.** triton
+  compiles `cuda_utils.c` at runtime; without `python3-devel`
+  (Python.h) both smokes fail in `triton/runtime/build.py`. The spec
+  should add `Requires: gcc, python3-devel` (follow-up to FlagTree
+  #794 after merge).
+- **F12 — pip torch shadows the flagtree RPM.** pypi torch pulls in
+  pypi triton, which lands in `/usr/local` ahead of the RPM's
+  `/usr/lib64` on sys.path — smokes silently test the wrong triton.
+  Any torch+flagtree environment must `pip uninstall -y triton
+  pytorch-triton`. Needs an install-docs note (and ideally a
+  Conflicts/priority story later).
+- **Platform CUDA reality:** this GPU fleet runs driver 12.2, so the
+  future C++ rebuilds (flagcx etc.) must link CUDA 12 on it — the
+  openeuler/cuda:13 image's toolkit compiles but its runtime can't
+  execute there. Revises the earlier "follow cuda13" note.
+
+With this, the month goal — openEuler 24.03 installable AND runnable
+— is fully closed for the python-side stack.
+
 ## Repro
 
 ```sh
