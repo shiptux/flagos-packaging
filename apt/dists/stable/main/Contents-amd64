@@ -8,6 +8,7 @@ usr/lib/python3/dist-packages/flagsparse/sparse_operations/benchmarks.py	    pyt
 usr/lib/python3/dist-packages/flagsparse/sparse_operations/gather_scatter.py	    python/python3-flagsparse
 usr/lib/python3/dist-packages/flagsparse/sparse_operations/sddmm_csr.py	    python/python3-flagsparse
 usr/lib/python3/dist-packages/flagsparse/sparse_operations/spgemm_csr.py	    python/python3-flagsparse
+usr/lib/python3/dist-packages/flagsparse/sparse_operations/spmm_bsr.py	    python/python3-flagsparse
 usr/lib/python3/dist-packages/flagsparse/sparse_operations/spmm_coo.py	    python/python3-flagsparse
 usr/lib/python3/dist-packages/flagsparse/sparse_operations/spmm_csr.py	    python/python3-flagsparse
 usr/lib/python3/dist-packages/flagsparse/sparse_operations/spmm_csr_opt_alg2.py	    python/python3-flagsparse

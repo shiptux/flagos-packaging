@@ -3,16 +3,16 @@ Source: flagsparse
 Version: 1.0.0-1
 Architecture: all
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 874
+Installed-Size: 926
 Depends: python3:any
 Homepage: https://github.com/flagos-ai/FlagSparse
 Priority: optional
 Section: python
 Filename: pool/main/f/flagsparse/python3-flagsparse_1.0.0-1_all.deb
-Size: 98664
-SHA256: dfc927b4a2e38f582928cf3e2377ebcca62105a4680835a6ddc373f28b5e87a3
-SHA1: b0bca954c60c31f1708f102e993c1f43763a0d43
-MD5sum: b328c38bc4ff734ebb55b947484a90ad
+Size: 107368
+SHA256: 9e6ac680e7c095984706605be70daa21961fa4201a7aa1725ceeabb85cf95b0c
+SHA1: a0c0986a728e70b34875a65ad91ddabd304f1323
+MD5sum: a3628d6587893b374d73260aff1032dd
 Description: FlagSparse — sparse compute kernels for FlagOS
  Sparse-matrix operators (SpMM, SpMV, sampled dense-dense) for FlagOS-supported accelerators.
 
