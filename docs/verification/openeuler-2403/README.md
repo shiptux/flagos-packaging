@@ -402,6 +402,42 @@ Next: turn this recipe into `packaging/rpm` openEuler support in
 FlagCX upstream (spec BuildRequires + build container prep), then
 libtriton-jit (needs libtorch) and flagfft.
 
+## Update 2026-08-06 — all remaining components tested on A100
+
+The same openEuler 24.03 / NVIDIA A100 workspace was used to close the
+component-level NVIDIA test gap. Nine Python components and the two remaining
+native components all passed result-checked GPU paths:
+
+| Group | Components | Result |
+|-------|------------|--------|
+| Python | FlagAttention, FlagAudio, FlagBLAS, FlagDNN, FlagGems, FlagQuantum, FlagScale, FlagSparse, FlagTensor | 9/9 PASS |
+| Native | libtriton_jit | 5/5 add correctness/benchmark tests PASS |
+| Native | FlagFFT | 8/8 plan tests + 23/23 cuFFT comparison tests PASS |
+
+FlagFFT's full C API matrix covered single/double precision complex and real
+transforms, Bluestein, four-step, nested `2^23` transforms, in-place calls,
+custom streams, and invalid inputs. All functional outputs were compared with
+cuFFT; the 23 GPU tests completed in about 428 seconds.
+
+Inventory conclusion:
+
+- The 12 components catalogued by `components/*.yml` have now all exercised an
+  NVIDIA functional path.
+- FlagAudio, which is currently missing from `components/`, was also tested.
+- Counting that upstream component gives 13 tested and **0 untested** at the
+  component/source level.
+
+This does not close package-level validation. The eleven components in this
+run were built or imported from packaging-branch sources, not installed from
+published `.oe2403` RPMs. Native testing also exposed environment/package work
+still needed for reproducible RPM builds: the host has CUDA 13 `nvcc` but a
+CUDA-12-only driver, PyTorch's CMake/RPATH metadata points at inconsistent CUDA
+locations, FlagFFT test targets do not inherit Torch's old libstdc++ ABI, and
+the host lacks `sqlite-devel`.
+
+Harness, exact workarounds, source revisions, and full result table:
+[`all-components-gpu/README.md`](all-components-gpu/README.md).
+
 ## Repro
 
 ```sh

@@ -57,7 +57,7 @@ Success = `VERIFY: ALL PASSED` in the build output.
 - **Path A (cmake-install): PASSED** 2026-06-15.
 - **Path B (.deb): PASSED** 2026-06-25 — full run reached
   `VERIFY: ALL PASSED` with `libtriton_jit pr/packaging` + `FlagGems
-  master`. The earlier full-core-parallel OOM is fixed with
+  pr/packaging`. The earlier full-core-parallel OOM is fixed with
   `parallel=4`. The `dpkg-shlibdeps: cannot find library libcuda.so.1`
   line is expected and tolerated (devel image ships only the libcuda
   stub; `debian/rules` `override_dh_shlibdeps ... || true` ignores it —
