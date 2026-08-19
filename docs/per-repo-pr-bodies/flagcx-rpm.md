@@ -1,60 +1,59 @@
-## Summary
+### PR Category
 
-Adds Debian (`.deb`) and RPM packaging configuration under
-`packaging/debian/` and `packaging/rpm/` so this component can be
-distributed alongside the rest of the FlagOS stack via standard
-`apt install` / `dnf install` flows.
+CICD
 
-Produced binary: **libflagcx-{nvidia,metax,ascend} + -devel** (≈n/a .deb, ≈≈600 KB each .rpm).
+### PR Types
 
-## What changed
+New Features
 
-- `packaging/debian/{control,rules,changelog,copyright,source/format}` — Debian source-format-3.0-native packaging.
-- `packaging/rpm/specs/libflagcx-{nvidia,metax,ascend} + -devel\.spec` — RPM spec using `pyproject-rpm-macros`.
-- `packaging/{debian,rpm}/helpers/` — single-command containerized build:
-  `bash packaging/debian/build-helpers/build-<slug>.sh` produces the
-  .deb without host build-deps; same shape for RPM.
+### PR Description
 
-No source code changes outside `packaging/`.
+Adds RPM packaging support for FlagCX targeting RHEL / Rocky / OpenEuler
+distributions, mirroring the existing Debian packaging path. Pair to
+existing PR #393 (Ascend DEB) — this is the RPM-only sibling, freshly
+rebased onto current `main` so the diff is reviewable.
 
-## How it was tested
+**Background**: original PR #394 has been open since 2026-02-26 with
+no review and the branch has drifted 78 commits / 304 files behind
+upstream main, making the diff unreadable. This PR is a clean replay
+of the same packaging work (3 commits / 5 files) onto current main.
+#394 can be closed in favor of this one, or the branch on #394 can be
+force-pushed to match this clean state — at the reviewer's preference.
 
-Local container build produces the noarch .deb and .rpm above.
-End-to-end install in clean `ubuntu:24.04` and `debian:trixie`
-containers from a local signed APT repo passes `apt install` +
-`importlib.util.find_spec(<module>)` smoke check.
+**Produced binaries (built locally per backend):**
 
-The `dh_auto_test` override uses `importlib.util.find_spec`
-rather than `import`, so the build-time smoke test validates
-install layout (right path, importable from the dist-packages dir)
-without triggering runtime imports of torch / triton / etc. — those
-are user-install-time concerns, not packaging concerns.
+For each of `nvidia` / `metax` / `ascend`:
 
-Note: this PR is the RPM-only sibling of #393 (Ascend DEB) and
-supersedes the stale rebase target #394 still has.
+- `libflagcx-<backend>-0.8.0-1.x86_64.rpm` — runtime shared library
+- `libflagcx-<backend>-devel-0.8.0-1.x86_64.rpm` — headers + .so symlink
 
-## Distribution
+6 binary RPMs per release (3 backends × {runtime, -devel}), one
+backend-specific docker image per build.
 
-This artifact is consumed by a central FlagOS publish repo
-(sandbox at https://github.com/shiptux/flagos-packaging; the
-production endpoint remains the FlagOS Nexus mirror at
-`resource.flagos.net`). Companion design notes in the sandbox
-repo cover multi-distro strategy
-(`docs/multi-distro-strategy-notes.md`) and a per-distro
-compatibility matrix (`docs/compatibility-status.md`).
+**What changed (all under `packaging/rpm/`, no DEB or source changes):**
 
-## Known limitations
+- `rpm/specs/flagcx.spec` — Parameterized spec using `%{backend}`
+  macro to generate per-backend package names. Conditional sub-package
+  declaration; SONAME + RPATH handling via `patchelf` for
+  /usr/lib relocation.
+- `rpm/dockerfiles/Dockerfile.rpm` — Unified Dockerfile with
+  `BASE_IMAGE` + `BACKEND` build args. Three backends share one
+  Dockerfile, picking distinct vendor SDK base images:
+  - nvidia: rockylinux:8 + CUDA RPM repo
+  - metax: rockylinux:8 + MACA SDK yum repo
+  - ascend: openeuler:24.03 + Huawei CANN
+- `rpm/build-flagcx-rpm.sh` — Parameterized entry point:
+  `./packaging/rpm/build-flagcx-rpm.sh <backend>`.
+- `.github/workflows/build-rpm.yml` — CI matrix building all three
+  backends on push and PR. Mirrors `build-deb.yml` from #393.
 
-- Pair to existing PR #394; this is the freshly rebased branch
-  off current main (the original `pr/rpm-packaging` was 78
-  commits / 304 files behind main and unreviewable).
-- Three backends × {runtime, -devel} = 6 RPMs per release.
-- Builds in backend-specific docker images (one per vendor SDK)
-  identically to the DEB build flow on PR #393.
+**How it was tested:**
 
-## Out of scope (separate plans)
+`bash packaging/rpm/build-flagcx-rpm.sh nvidia` produces
+`libflagcx-nvidia` + `libflagcx-nvidia-devel` RPMs cleanly in a
+rockylinux:8 container. Same flow for metax / ascend with their
+respective base images.
 
-- Multi-Python-ABI build matrix (cp312 / cp313 / cp314) — captured
-  as a known issue, not blocking this PR.
-- C++ extension split (relevant for FlagGems / FlagTree only) —
-  Phase 2 work, separate PR if/when needed.
+Companion DEB packaging (PR #393) and central distribution pipeline
+(https://github.com/shiptux/flagos-packaging) are unaffected by this
+PR — they were validated separately and continue to work.

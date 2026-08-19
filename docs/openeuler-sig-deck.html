@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FlagOS on openEuler 24.03 · SIG 进展同步</title>
+
+<style>
+  :root {
+    --ground: #EEF2F1;
+    --surface: #FFFFFF;
+    --surface-2: #F6F9F8;
+    --ink: #0D1F1C;
+    --ink-2: #3F534F;
+    --muted: #6E817D;
+    --line: #D6DEDC;
+    --accent: #0B7A6E;
+    --accent-bright: #0E9885;
+    --warm: #A9660F;
+    --warm-bg: #F6EAD6;
+    --good: #2E9E6B;
+    --wip: #B67C13;
+    --plan: #8A9995;
+    --shadow: 0 1px 2px rgba(13,31,28,.06), 0 8px 30px rgba(13,31,28,.07);
+    --sans: system-ui, -apple-system, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    --mono: ui-monospace, "SF Mono", "Menlo", "Cascadia Code", "Consolas", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0B1513;
+      --surface: #131F1D;
+      --surface-2: #182623;
+      --ink: #EAF1EF;
+      --ink-2: #B4C4C0;
+      --muted: #7E918D;
+      --line: #24332F;
+      --accent: #2FBEAB;
+      --accent-bright: #4BE0CB;
+      --warm: #E0A94A;
+      --warm-bg: #2A2113;
+      --good: #43C489;
+      --wip: #E0B24A;
+      --plan: #6E817D;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 34px rgba(0,0,0,.34);
+    }
+  }
+  :root[data-theme="light"] {
+    --ground: #EEF2F1; --surface: #FFFFFF; --surface-2: #F6F9F8; --ink: #0D1F1C;
+    --ink-2: #3F534F; --muted: #6E817D; --line: #D6DEDC; --accent: #0B7A6E;
+    --accent-bright: #0E9885; --warm: #A9660F; --warm-bg: #F6EAD6; --good: #2E9E6B;
+    --wip: #B67C13; --plan: #8A9995; --shadow: 0 1px 2px rgba(13,31,28,.06), 0 8px 30px rgba(13,31,28,.07);
+  }
+  :root[data-theme="dark"] {
+    --ground: #0B1513; --surface: #131F1D; --surface-2: #182623; --ink: #EAF1EF;
+    --ink-2: #B4C4C0; --muted: #7E918D; --line: #24332F; --accent: #2FBEAB;
+    --accent-bright: #4BE0CB; --warm: #E0A94A; --warm-bg: #2A2113; --good: #43C489;
+    --wip: #E0B24A; --plan: #6E817D; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 34px rgba(0,0,0,.34);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .stage { position: fixed; inset: 0; overflow: hidden; }
+  .track {
+    display: flex; height: 100%; width: 100%;
+    transition: transform .5s cubic-bezier(.6,.02,.2,1);
+  }
+  @media (prefers-reduced-motion: reduce) { .track { transition: none; } }
+
+  .slide {
+    flex: 0 0 100%; height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: clamp(2rem, 5vw, 5.5rem) clamp(2rem, 7vw, 8rem);
+  }
+  .inner { width: 100%; max-width: 1120px; margin: 0 auto; }
+
+  .eyebrow {
+    font-family: var(--mono); font-size: clamp(.72rem, 1.1vw, .9rem);
+    letter-spacing: .22em; text-transform: uppercase; color: var(--accent);
+    display: flex; align-items: center; gap: .7em; margin: 0 0 1.4rem;
+  }
+  .eyebrow::before {
+    content: ""; width: 2.2rem; height: 2px; background: var(--accent); display: inline-block;
+  }
+
+  h1 { font-size: clamp(2.4rem, 6.4vw, 5rem); line-height: 1.02; letter-spacing: -.02em;
+       margin: 0; font-weight: 760; text-wrap: balance; }
+  h2 { font-size: clamp(1.7rem, 3.6vw, 2.9rem); line-height: 1.08; letter-spacing: -.015em;
+       margin: 0 0 2rem; font-weight: 720; text-wrap: balance; }
+  .lead { font-size: clamp(1.05rem, 1.7vw, 1.35rem); color: var(--ink-2); line-height: 1.5;
+          max-width: 42ch; margin: 1.3rem 0 0; }
+
+  /* cover */
+  .cover h1 { font-size: clamp(2.8rem, 8vw, 6rem); }
+  .cover .sub { font-size: clamp(1.15rem, 2.3vw, 1.7rem); color: var(--ink-2);
+                margin: 1.5rem 0 0; font-weight: 500; }
+  .cover .meta { display: flex; gap: 1.4rem; flex-wrap: wrap; margin-top: 3rem;
+                 font-family: var(--mono); font-size: .82rem; color: var(--muted);
+                 letter-spacing: .04em; }
+  .cover .meta span { display: inline-flex; align-items: center; gap: .5em; }
+  .dot-mark { width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent); }
+
+  .thesis { font-size: clamp(1.9rem, 4.3vw, 3.4rem); line-height: 1.16; font-weight: 700;
+            letter-spacing: -.015em; text-wrap: balance; margin: 0; }
+  .thesis .hl { color: var(--accent); }
+  .subpoints { list-style: none; padding: 0; margin: 2.4rem 0 0; display: grid; gap: 1rem;
+               max-width: 46ch; }
+  .subpoints li { display: flex; gap: .85rem; font-size: clamp(1rem, 1.5vw, 1.2rem);
+                  color: var(--ink-2); line-height: 1.45; }
+  .subpoints li::before { content: "›"; color: var(--accent); font-weight: 700; flex: 0 0 auto; }
+
+  .term {
+    margin-top: 2.4rem; background: var(--ink); color: #E7EFEC; border-radius: 12px;
+    font-family: var(--mono); font-size: clamp(.78rem, 1.25vw, .98rem); line-height: 1.85;
+    box-shadow: var(--shadow); overflow: hidden; max-width: 760px;
+  }
+  :root[data-theme="dark"] .term { background: #06100E; }
+  @media (prefers-color-scheme: dark) { .term { background: #06100E; } }
+  .term .bar { display: flex; gap: .5rem; padding: .7rem .9rem; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .term .bar i { width: .7rem; height: .7rem; border-radius: 50%; background: #3a4a47; display: block; }
+  .term pre { margin: 0; padding: 1.1rem 1.4rem 1.3rem; white-space: pre-wrap; }
+  .term .cmd::before { content: "$ "; color: var(--accent-bright); }
+  .term .out { color: #8FA39E; }
+
+  /* pillars */
+  .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 1.7rem 1.6rem; box-shadow: var(--shadow); display: flex; flex-direction: column;
+  }
+  .card .k { font-family: var(--mono); font-size: .78rem; letter-spacing: .12em;
+             text-transform: uppercase; color: var(--accent); margin-bottom: .9rem; }
+  .card h3 { font-size: clamp(1.1rem, 1.7vw, 1.35rem); margin: 0 0 .7rem; letter-spacing: -.01em; }
+  .card p { margin: 0; color: var(--ink-2); font-size: clamp(.92rem, 1.3vw, 1.02rem); line-height: 1.5; }
+  .card .tags { margin-top: 1.1rem; display: flex; flex-wrap: wrap; gap: .45rem; }
+  .chip { font-family: var(--mono); font-size: .72rem; padding: .28em .7em; border-radius: 999px;
+          background: var(--surface-2); border: 1px solid var(--line); color: var(--ink-2); }
+  .chip.done { color: var(--good); border-color: color-mix(in srgb, var(--good) 40%, var(--line)); }
+
+  /* table */
+  .cov { width: 100%; border-collapse: collapse; font-size: clamp(.95rem, 1.5vw, 1.15rem); }
+  .cov td { padding: 1.05rem .4rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  .cov tr:last-child td { border-bottom: none; }
+  .cov .pkg { font-family: var(--mono); color: var(--ink); font-size: .95em; }
+  .cov .note { color: var(--muted); text-align: right; font-size: .9em; }
+  .status { display: inline-flex; align-items: center; gap: .5em; font-weight: 600;
+            font-size: .92em; white-space: nowrap; }
+  .status::before { content: ""; width: .62em; height: .62em; border-radius: 50%; }
+  .status.ok { color: var(--good); } .status.ok::before { background: var(--good); }
+  .status.wip { color: var(--wip); } .status.wip::before { background: var(--wip);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--wip) 18%, transparent); }
+  .status.plan { color: var(--plan); } .status.plan::before {
+            background: transparent; border: 2px solid var(--plan); }
+
+  /* collaboration slide */
+  .slide.collab { background:
+      radial-gradient(120% 90% at 100% 0%, color-mix(in srgb, var(--warm) 12%, transparent), transparent 60%),
+      var(--ground); }
+  .callout {
+    margin-top: 1.8rem; border-left: 3px solid var(--warm); background: var(--warm-bg);
+    border-radius: 0 12px 12px 0; padding: 1.5rem 1.7rem;
+  }
+  .callout .k { font-family: var(--mono); font-size: .76rem; letter-spacing: .14em;
+                text-transform: uppercase; color: var(--warm); margin-bottom: .7rem; }
+  .callout p { margin: 0; font-size: clamp(1.05rem, 1.8vw, 1.35rem); line-height: 1.5; color: var(--ink); }
+  .callout strong { color: var(--warm); }
+  .boundary { display: grid; gap: 1rem; margin: .4rem 0 0; }
+  .brow { display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: start;
+          font-size: clamp(.95rem, 1.45vw, 1.12rem); line-height: 1.5; color: var(--ink-2); }
+  .brow .tag { font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; padding: .3em .65em;
+               border-radius: 6px; white-space: nowrap; margin-top: .15em; }
+  .tag.nv { background: color-mix(in srgb, var(--good) 16%, transparent); color: var(--good); }
+  .tag.oe { background: color-mix(in srgb, var(--wip) 18%, transparent); color: var(--wip); }
+
+  /* discuss list */
+  .disc { display: grid; gap: 1.3rem; margin: 0; padding: 0; list-style: none; }
+  .disc li { padding-bottom: 1.3rem; border-bottom: 1px solid var(--line); }
+  .disc li:last-child { border-bottom: none; padding-bottom: 0; }
+  .disc h3 { margin: 0 0 .4rem; font-size: clamp(1.1rem, 1.7vw, 1.35rem); letter-spacing: -.01em; }
+  .disc p { margin: 0; color: var(--ink-2); font-size: clamp(.94rem, 1.35vw, 1.06rem); line-height: 1.5; }
+
+  /* plan + close */
+  .plan-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.3rem; margin-bottom: 2.2rem; }
+  .phase { background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+           padding: 1.5rem 1.4rem; box-shadow: var(--shadow); }
+  .phase .t { font-family: var(--mono); font-size: .76rem; letter-spacing: .12em; text-transform: uppercase;
+              color: var(--accent); margin-bottom: .8rem; }
+  .phase p { margin: 0; color: var(--ink-2); font-size: clamp(.9rem, 1.3vw, 1rem); line-height: 1.5; }
+  .close-note { font-size: clamp(1.05rem, 1.7vw, 1.3rem); color: var(--ink); line-height: 1.5;
+                border-left: 3px solid var(--accent); padding-left: 1.2rem; margin: 0; text-wrap: balance; }
+
+  /* chrome */
+  .chrome { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: .9rem clamp(1.2rem, 4vw, 2.6rem); pointer-events: none; }
+  .dots { display: flex; gap: .5rem; pointer-events: auto; }
+  .dots button { width: .62rem; height: .62rem; padding: 0; border: none; border-radius: 50%;
+                 background: var(--line); cursor: pointer; transition: transform .2s, background .2s; }
+  .dots button[aria-current="true"] { background: var(--accent); transform: scale(1.25); }
+  .dots button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .nav { display: flex; align-items: center; gap: .5rem; pointer-events: auto; }
+  .nav button, .toggle {
+    font-family: var(--mono); font-size: .8rem; color: var(--ink-2); background: var(--surface);
+    border: 1px solid var(--line); border-radius: 8px; padding: .45rem .7rem; cursor: pointer;
+    box-shadow: var(--shadow); line-height: 1;
+  }
+  .nav button:hover, .toggle:hover { color: var(--accent); border-color: var(--accent); }
+  .nav button:focus-visible, .toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .counter { font-family: var(--mono); font-size: .8rem; color: var(--muted);
+             pointer-events: auto; letter-spacing: .05em; }
+  .counter b { color: var(--ink); font-weight: 600; }
+  .progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--accent);
+              z-index: 40; transition: width .5s cubic-bezier(.6,.02,.2,1); }
+  .brand { position: fixed; top: 0; right: 0; z-index: 30; font-family: var(--mono);
+           font-size: .74rem; letter-spacing: .1em; color: var(--muted);
+           padding: 1rem clamp(1.2rem, 4vw, 2.6rem); text-transform: uppercase; }
+
+  @media (max-width: 720px) {
+    .pillars, .plan-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .cov .note { display: none; }
+    .brand { display: none; }
+  }
+
+  /* print → one slide per page for PDF export */
+  @media print {
+    @page { size: 1280px 720px; margin: 0; }
+    body { overflow: visible; background: #fff; }
+    .stage { position: static; overflow: visible; }
+    .track { display: block; transform: none !important; }
+    .slide { break-after: page; page-break-after: always; height: 720px; }
+    .chrome, .progress, .brand { display: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="brand">FlagOS × openEuler</div>
+
+<div class="stage">
+  <div class="track" id="track">
+
+    <!-- 1 · cover -->
+    <section class="slide cover">
+      <div class="inner">
+        <p class="eyebrow">openEuler SIG</p>
+        <h1>FlagOS on<br>openEuler 24.03</h1>
+        <p class="sub">打包适配的进展，以及想和社区聊的几件事</p>
+        <div class="meta">
+          <span><i class="dot-mark"></i>2026-07-31</span>
+          <span><i class="dot-mark"></i>FlagOS 打包组</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · thesis -->
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow">现在到哪一步了</p>
+        <p class="thesis">openEuler 24.03 上，FlagOS 现在<span class="hl">装得上、也能测</span>。</p>
+        <ul class="subpoints">
+          <li>三条命令就能从公开源装好（目前发布在测试/实验仓库），包是在 openEuler 上原生构建的，不是从 Fedora 移过来的</li>
+          <li>机器上没有卡也没关系，Triton 能把 kernel 一路编到最后，生成 GPU 直接能跑的机器码，说明编译这条路是通的</li>
+          <li>带卡的真机验证、还有更多组件的打包，还在做</li>
+        </ul>
+        <div class="term" aria-label="安装命令">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <pre><span class="cmd">sudo curl -fsSL .../flagos-openeuler2403.repo -o /etc/yum.repos.d/flagos.repo</span>
+<span class="cmd">sudo dnf makecache -y</span>
+<span class="cmd">sudo dnf install python3-flagtree-nvidia python3-flagsparse</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · done -->
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow">已经做完的部分</p>
+        <div class="pillars">
+          <div class="card">
+            <div class="k">打包与发布</div>
+            <h3>发布链路能用了</h3>
+            <p>包在 openEuler 24.03 上原生构建，不再是装不上的 Fedora 副本。发布源、<code>.repo</code> 配置、产物自动收集都已就位，从公开源直接能装（目前是测试／实验仓库，还不是正式源）。</p>
+          </div>
+          <div class="card">
+            <div class="k">合进 FlagOS 上游</div>
+            <h3>逐个往上游合</h3>
+            <p>FlagSparse 的打包已经合进 FlagOS 上游主线，main 持续产出 openEuler 包；FlagTree、FlagAttention 过了 CI，正在往 FlagOS 上游合。</p>
+            <div class="tags">
+              <span class="chip done">FlagSparse 已合并</span>
+              <span class="chip">FlagTree 已 APPROVED</span>
+              <span class="chip">FlagAttention 待合入</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="k">实测</div>
+            <h3>装和编译都验过</h3>
+            <p>干净的 openEuler 24.03 容器，按文档把三个包装上，导入都没问题；没有卡的机器上编译也能一路走完，编译链这块放心了。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · coverage -->
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow">openEuler 源里现在有哪些包</p>
+        <table class="cov">
+          <tr>
+            <td class="pkg">python3-flagsparse</td>
+            <td><span class="status ok">稳定</span></td>
+            <td class="note">已融入上游主线</td>
+          </tr>
+          <tr>
+            <td class="pkg">python3-flagtree-nvidia</td>
+            <td><span class="status ok">可安装</span></td>
+            <td class="note">cp311 原生构建</td>
+          </tr>
+          <tr>
+            <td class="pkg">python3-flag-attention</td>
+            <td><span class="status ok">可安装</span></td>
+            <td class="note">随 PR 合入转长期稳定</td>
+          </tr>
+          <tr>
+            <td class="pkg">其余 Python 包</td>
+            <td><span class="status wip">逐步展开</span></td>
+            <td class="note">打包模板已就绪</td>
+          </tr>
+          <tr>
+            <td class="pkg">C++ 组件（flagcx / libtriton-jit …）</td>
+            <td><span class="status plan">待方案</span></td>
+            <td class="note">先摸清 CUDA/SDK 在 openEuler 怎么管</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- 5 · test env + collaboration -->
+    <section class="slide collab">
+      <div class="inner">
+        <p class="eyebrow">测试环境</p>
+        <h2>先说清楚测到了哪一步</h2>
+        <div class="boundary">
+          <div class="brow">
+            <span class="tag nv">NVIDIA</span>
+            <span>手上的卡就一块 <b>A100，装在 Ubuntu 上</b>。所以 NVIDIA/CUDA 这块（装、导入、算子数值）是在 <b>deb 链路</b>上测的，测得比较透。</span>
+          </div>
+          <div class="brow">
+            <span class="tag oe">openEuler</span>
+            <span>RPM 这边，装和编译早就验过了。openEuler 上带 <b>N 卡</b>的环境之前在平台上不好弄，<b>今天刚打通，就在开会前</b>。有了这套，整个流程（打包、安装、带卡跑）就能在 <b>NVIDIA 上完整走一遍</b>了。这块我们自己推进。</span>
+          </div>
+        </div>
+        <div class="callout">
+          <div class="k">想请社区帮的</div>
+          <p>NVIDIA 这套我们能自己验证，但<strong>其他后端、其他卡</strong>（国产 GPU 之类）手上就没有了。这块<strong>要是社区能帮忙提供环境、或牵个线找到对应厂商，就更好了</strong>，openEuler 上的多后端我们能一起往前推。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · discuss -->
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow">想和社区商量的几件事</p>
+        <ol class="disc">
+          <li>
+            <h3>正式入仓怎么走</h3>
+            <p>打算挂 sig-AI 提软件包引入。有个前提：src-openeuler 的 spec 得指向能下载的发布 tarball，也就是 FlagOS 各组件先得打正式 release tag。这块的流程想听听社区的经验。</p>
+          </li>
+          <li>
+            <h3>CUDA 和 SDK 在 openEuler 上怎么管理</h3>
+            <p>openEuler 是有 CUDA 镜像的（现在是 CUDA 13）。真正要研究的是 CUDA 和相关 SDK 在 openEuler 上怎么装、怎么管。另外我们自己也得摸清楚，到底哪些 C++ 组件依赖 CUDA 12、依赖有多深，先把这个具体问题找出来。</p>
+          </li>
+          <li>
+            <h3>几个缺的依赖，想听听社区的做法</h3>
+            <p>typer、hydra-core 这几个 Python 库 openEuler 源里还没有。说实话我们还没想好怎么弄，随包带进去、还是走 EUR，就想先听听社区一般怎么处理。（顺带一提，现在 openEuler 的适配都是在 FlagOS 自己的 CI 里跑的。）</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- 7 · plan + close -->
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow">接下来打算做的</p>
+        <div class="plan-grid">
+          <div class="phase">
+            <div class="t">近期</div>
+            <p>把刚打通的 openEuler 带卡环境上的 RPM + NVIDIA 测试跑完整；打包模板铺到更多 Python 组件。</p>
+          </div>
+          <div class="phase">
+            <div class="t">中期</div>
+            <p>torch 那几个组件批量适配；CUDA 版本对齐后再动 C++ 组件；先往 EUR 提个试构建探探路。</p>
+          </div>
+          <div class="phase">
+            <div class="t">长期</div>
+            <p>走完正式入仓申请，把依赖链和许可证理清楚。</p>
+          </div>
+        </div>
+        <p class="close-note">上面哪块都欢迎聊。尤其国产 GPU 的环境，社区要是能搭把手，就帮大忙了。</p>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div class="chrome">
+  <div class="dots" id="dots" role="tablist" aria-label="幻灯页导航"></div>
+  <div class="counter"><b id="cur">1</b> / <span id="total">7</span></div>
+  <div class="nav">
+    <button id="prev" aria-label="上一页">‹ 上一页</button>
+    <button id="next" aria-label="下一页">下一页 ›</button>
+    <button class="toggle" id="toggle" aria-label="切换明暗主题">◐ 主题</button>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var track = document.getElementById('track');
+    var slides = Array.prototype.slice.call(track.children);
+    var total = slides.length;
+    var i = 0;
+    var dotsWrap = document.getElementById('dots');
+    var curEl = document.getElementById('cur');
+    var progress = document.getElementById('progress');
+    document.getElementById('total').textContent = total;
+
+    slides.forEach(function (_, n) {
+      var b = document.createElement('button');
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-label', '第 ' + (n + 1) + ' 页');
+      b.addEventListener('click', function () { go(n); });
+      dotsWrap.appendChild(b);
+    });
+    var dots = Array.prototype.slice.call(dotsWrap.children);
+
+    function go(n) {
+      i = Math.max(0, Math.min(total - 1, n));
+      track.style.transform = 'translateX(' + (-i * 100) + '%)';
+      curEl.textContent = i + 1;
+      progress.style.width = ((i + 1) / total * 100) + '%';
+      dots.forEach(function (d, k) { d.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+    }
+
+    document.getElementById('prev').addEventListener('click', function () { go(i - 1); });
+    document.getElementById('next').addEventListener('click', function () { go(i + 1); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(i + 1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+      else if (e.key === 'Home') { go(0); }
+      else if (e.key === 'End') { go(total - 1); }
+    });
+
+    var toggle = document.getElementById('toggle');
+    toggle.addEventListener('click', function () {
+      var root = document.documentElement;
+      var isDark = root.getAttribute('data-theme') === 'dark' ||
+        (!root.getAttribute('data-theme') && matchMedia('(prefers-color-scheme: dark)').matches);
+      root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    });
+
+    go(0);
+  })();
+</script>
+</body>
+</html>

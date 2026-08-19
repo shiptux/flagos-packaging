@@ -1,57 +1,59 @@
-## Summary
+### PR Category
+
+CICD
+
+### PR Types
+
+New Features
+
+### PR Description
 
 Adds Debian (`.deb`) and RPM packaging configuration under
-`packaging/debian/` and `packaging/rpm/` so this component can be
-distributed alongside the rest of the FlagOS stack via standard
-`apt install` / `dnf install` flows.
+`packaging/debian/` and `packaging/rpm/` so FlagScale can be
+distributed as a noarch package alongside the rest of the FlagOS
+stack via standard `apt install` / `dnf install` flows.
 
-Produced binary: **python3-flagscale** (≈587 KB .deb, ≈2.0 MB .rpm).
+**Produced binaries (built locally on Ubuntu 22.04 / Fedora 43):**
 
-## What changed
+- `python3-flagscale_1.0.0-1_all.deb` (≈587 KB, noarch)
+- `python3-flagscale-1.0.0-1.fc43.noarch.rpm` (≈2.0 MB)
 
-- `packaging/debian/{control,rules,changelog,copyright,source/format}` — Debian source-format-3.0-native packaging.
-- `packaging/rpm/specs/flagscale\.spec` — RPM spec using `pyproject-rpm-macros`.
-- `packaging/{debian,rpm}/helpers/` — single-command containerized build:
-  `bash packaging/debian/build-helpers/build-<slug>.sh` produces the
-  .deb without host build-deps; same shape for RPM.
+Ships the `flagscale` CLI under `/usr/bin/flagscale`. Heavy ML deps
+(PyTorch, Megatron, vLLM) are intentionally NOT declared as hard
+Depends — they're sized / sourced by the user (e.g. `pip install
+"flagscale[cuda-train]"` or via NVIDIA's NGC container).
 
-No source code changes outside `packaging/`.
+**What changed (all under `packaging/`, no source code changes):**
 
-## How it was tested
+- `debian/{control,rules,changelog,copyright,source/format}` — Debian
+  source-format-3.0-native packaging using `dh-python` +
+  `pyproject-rpm-macros`.
+- `rpm/specs/flagscale.spec` — RPM spec mirroring the DEB layout,
+  using `%pyproject_wheel` / `%pyproject_install` /
+  `%pyproject_save_files` for modern Fedora compatibility.
+- `{debian,rpm}/build-helpers/` — single-command containerized
+  build: `bash packaging/debian/build-helpers/build-flagscale.sh`
+  produces the .deb without host build-deps; same shape for RPM.
 
-Local container build produces the noarch .deb and .rpm above.
-End-to-end install in clean `ubuntu:24.04` and `debian:trixie`
-containers from a local signed APT repo passes `apt install` +
-`importlib.util.find_spec(<module>)` smoke check.
+**How it was tested:**
 
-The `dh_auto_test` override uses `importlib.util.find_spec`
-rather than `import`, so the build-time smoke test validates
-install layout (right path, importable from the dist-packages dir)
-without triggering runtime imports of torch / triton / etc. — those
-are user-install-time concerns, not packaging concerns.
+- Local container build produces both artifacts above.
+- Clean `ubuntu:24.04` + `debian:trixie` containers `apt install
+  python3-flagscale` succeed; `importlib.util.find_spec('flagscale')`
+  resolves under `/usr/lib/python3/dist-packages/flagscale/`.
+- Public end-to-end install from
+  `https://shiptux.github.io/flagos-packaging/apt` validated on
+  2026-05-20 (see flagos-packaging docs).
 
-The DEB and RPM have been validated locally since 2026-04-13 (DEB
-end-to-end install in clean Ubuntu 22.04, RPM rebuilt 2026-05-16
-against fc43 Python 3.14).
-
-## Distribution
+**Distribution:**
 
 This artifact is consumed by a central FlagOS publish repo
 (sandbox at https://github.com/shiptux/flagos-packaging; the
 production endpoint remains the FlagOS Nexus mirror at
-`resource.flagos.net`). Companion design notes in the sandbox
-repo cover multi-distro strategy
-(`docs/multi-distro-strategy-notes.md`) and a per-distro
-compatibility matrix (`docs/compatibility-status.md`).
+`resource.flagos.net`).
 
-## Known limitations
+**Known limitations:**
 
-- Pure-Python noarch package, ships the `flagscale` CLI under `/usr/bin/flagscale`.
-- Heavy ML deps (PyTorch, Megatron, vLLM) intentionally NOT declared as hard Depends — they're sized / sourced by user (pip install "flagscale[cuda-train]" or via the NGC container).
-
-## Out of scope (separate plans)
-
-- Multi-Python-ABI build matrix (cp312 / cp313 / cp314) — captured
-  as a known issue, not blocking this PR.
-- C++ extension split (relevant for FlagGems / FlagTree only) —
-  Phase 2 work, separate PR if/when needed.
+- Pure-Python noarch package; no per-Python-ABI build needed.
+- Heavy ML deps left as user-supplied. Documented in
+  flagos-packaging's `docs/compatibility-status.md`.

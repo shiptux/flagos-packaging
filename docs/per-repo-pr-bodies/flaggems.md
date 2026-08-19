@@ -1,65 +1,65 @@
-## Summary
+### PR Category
 
-Adds Debian (`.deb`) and RPM packaging configuration under
-`packaging/debian/` and `packaging/rpm/` so this component can be
-distributed alongside the rest of the FlagOS stack via standard
-`apt install` / `dnf install` flows.
+CI/CD
 
-Produced binary: **python3-flag-gems** (≈604 KB .deb, ≈2.9 MB .rpm).
+### Type of Change
 
-## What changed
+New Feature
 
-- `packaging/debian/{control,rules,changelog,copyright,source/format}` — Debian source-format-3.0-native packaging.
-- `packaging/rpm/specs/flag-gems\.spec` — RPM spec using `pyproject-rpm-macros`.
-- `packaging/{debian,rpm}/helpers/` — single-command containerized build:
-  `bash packaging/debian/build-helpers/build-<slug>.sh` produces the
-  .deb without host build-deps; same shape for RPM.
+### Description
 
-No source code changes outside `packaging/`.
+Adds Debian (`.deb`) and RPM packaging configuration so FlagGems can
+be distributed via standard `apt install` / `dnf install` alongside
+the rest of the FlagOS stack.
 
-## How it was tested
+**Phase 1 only — Python distribution, no C++ split.** Mirrors
+upstream's `pip install flag_gems` default behavior
+(`FLAGGEMS_BUILD_C_EXTENSIONS=OFF`); the C++ operator runtime
+(`liboperators.so`) stays bundled inside the Python wheel. Phase 2
+(split into `libflaggems` + `libflaggems-dev` + `python3-flag-gems`
+sub-packages) requires a separate `cmake --install` step + loader
+patch and is deferred to a follow-up PR.
 
-Local container build produces the noarch .deb and .rpm above.
-End-to-end install in clean `ubuntu:24.04` and `debian:trixie`
-containers from a local signed APT repo passes `apt install` +
-`importlib.util.find_spec(<module>)` smoke check.
+**Produced binaries:**
 
-The `dh_auto_test` override uses `importlib.util.find_spec`
-rather than `import`, so the build-time smoke test validates
-install layout (right path, importable from the dist-packages dir)
-without triggering runtime imports of torch / triton / etc. — those
-are user-install-time concerns, not packaging concerns.
+- `python3-flag-gems_5.0.2-1_amd64.deb` (≈604 KB, 1501 files)
+- `python3-flag-gems-5.0.2-1.fc43.noarch.rpm` (≈2.9 MB)
 
-## Distribution
+14 vendor backend directories (`_aipu`, `_amd`, `_ascend`,
+`_cambricon`, `_enflame`, `_hygon`, `_iluvatar`, `_kunlunxin`,
+`_metax`, `_mthreads`, `_nvidia`, `_sunrise`, `_tsingmicro`, `_arm`)
+ship as Python source under `flag_gems/runtime/backend/`; active
+backend selected at runtime via `GEMS_VENDOR` env var or PyTorch
+auto-detect.
 
-This artifact is consumed by a central FlagOS publish repo
-(sandbox at https://github.com/shiptux/flagos-packaging; the
-production endpoint remains the FlagOS Nexus mirror at
-`resource.flagos.net`). Companion design notes in the sandbox
-repo cover multi-distro strategy
-(`docs/multi-distro-strategy-notes.md`) and a per-distro
-compatibility matrix (`docs/compatibility-status.md`).
+**What changed (all under `packaging/`, no source code changes):**
 
-## Known limitations
+- `debian/{control,rules,changelog,copyright,source/format}` — Debian
+  packaging via `dh-python` + scikit-build-core build backend.
+- `rpm/specs/flag-gems.spec` — RPM spec, fc43-compatible, uses
+  `pyproject-rpm-macros`. `%check` smoke test does
+  `importlib.util.find_spec('flag_gems')` against
+  `%{python3_sitearch}` (scikit-build-core marks wheels arch-tagged
+  even with C++ ext OFF, so install lands in sitearch not sitelib).
+- `{debian,rpm}/helpers/` — containerized build entry points.
+- `debian/helpers/local-deps/.gitignore` — local libtriton-jit
+  `.deb` drop point for build, never committed.
 
-- **Phase 1**: ships the pure-Python distribution (the wheel built
-  with `FLAGGEMS_BUILD_C_EXTENSIONS=OFF`, matching upstream
-  `pip install flag_gems` default behavior).
-- **Phase 2 (deferred)**: split the C++ `liboperators.so` into
-  `libflaggems` + headers into `libflaggems-dev`. Requires a
-  separate `cmake --install` step and a loader patch in the
-  Python module to find `liboperators.so` under `/usr/lib`
-  instead of bundled in the Python tree. Not in this PR.
-- 14 vendor backend directories (`_aipu`, `_amd`, `_ascend`,
-  `_cambricon`, `_enflame`, `_hygon`, `_iluvatar`, `_kunlunxin`,
-  `_metax`, `_mthreads`, `_nvidia`, `_sunrise`, `_tsingmicro`,
-  `_arm`) ship as Python source under `flag_gems/runtime/backend/`;
-  active backend selected at runtime via `GEMS_VENDOR` env var or
-  PyTorch auto-detect.
+### Issue
 
-## Out of scope (separate plans)
+No related issue tracked. This is the packaging companion to the
+FlagOS unified distribution effort (see flagos-packaging repo).
 
-- Multi-Python-ABI build matrix (cp312 / cp313 / cp314) — captured
-  as a known issue, not blocking this PR.
-- C++ extension split (relevant for FlagGems / FlagTree only) —
-  Phase 2 work, separate PR if/when needed.
+### Progress
+
+- [ ] Change is properly reviewed (1 reviewer required, 2 recommended).
+- [x] Change is responded to an issue. (N/A — packaging-only)
+- [ ] Change is fully covered by a UT.
+  (Build-time smoke test = `find_spec` validates install layout;
+  the full pytest suite needs GPU + cupy and stays out of
+  packaging CI scope per upstream FlagGems' own test workflow.)
+
+### Performance
+
+No runtime performance impact — packaging-only PR. No code changes
+under `src/`.
