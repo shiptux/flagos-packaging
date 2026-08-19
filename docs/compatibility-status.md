@@ -26,6 +26,7 @@ and `single-chain-policy.md`.
 | python3-flagtensor | ⚠ | ⚠ | ✓ | ⚠ | Same. |
 | python3-flagquantum | ⚠ | ⚠ | ✓ | ⚠ | Depends auto-includes torch and numpy. |
 | python3-flagsparse | ✓ | ✓ | ✓ | ✓ | No external deps. |
+| libflagfft-nvidia + dev | ⚠ | ⚠ | ⚠ | ⚠ | Needs NVIDIA CUDA repo (libcuda, libcudart). libtriton_jit is bundled statically. Single backend only. |
 | **python3-flagtree-nvidia** | ✓ | ✗ | ✗ | ✗ | cp310 wheel — Python ABI locked. Only Ubuntu 22.04 has matching Python. |
 
 Legend:

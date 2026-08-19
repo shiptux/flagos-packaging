@@ -7,6 +7,39 @@ FlagTree 等）拉取构建产物，使用一把共享 GPG 密钥签名，生成
 仓库元数据，最终通过 GitHub Pages（元数据）+ GitHub Releases（二进制）
 发布，让用户可以直接通过 `apt install` / `dnf install` 安装。
 
+当前 sandbox 入口：<https://shiptux.github.io/flagos-packaging>。
+未来生产入口（规划中）：<https://flagos-ai.github.io/flagos-packaging>。
+
+## 快速开始（sandbox）
+
+**Ubuntu / Debian：**
+
+```sh
+sudo install -d -m 0755 /etc/apt/keyrings
+curl -fsSL https://shiptux.github.io/flagos-packaging/pubkey.gpg | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/flagos.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/flagos.gpg] \
+  https://shiptux.github.io/flagos-packaging/apt stable main" | \
+  sudo tee /etc/apt/sources.list.d/flagos.list
+
+sudo apt update
+sudo apt install libflagcx-nvidia python3-flagscale python3-flagtree-nvidia
+```
+
+**Fedora / Rocky / OpenEuler：**
+
+```sh
+# <distro> 取值：fedora43 | el8 | el9 | openeuler2403 | opencloudos9 | openanolis8
+sudo curl -fsSL https://shiptux.github.io/flagos-packaging/flagos-<distro>.repo \
+  -o /etc/yum.repos.d/flagos.repo
+sudo dnf makecache -y
+sudo dnf install libflagcx-nvidia python3-flagscale python3-flagtree-nvidia
+```
+
+完整安装说明：[`docs/install_cn.md`](./docs/install_cn.md)。
+当前各发行版可装哪些包：[`docs/compatibility-status.md`](./docs/compatibility-status.md)。
+
 ## 架构
 
 ```

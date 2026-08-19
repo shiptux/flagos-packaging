@@ -1,10 +1,45 @@
 # flagos-packaging
 
+[English | [中文](./README_cn.md)]
+
 Central publishing repo for the FlagOS software stack — pulls per-component
 build artifacts from upstream repos, signs them with a single GPG key,
 generates APT and YUM repository metadata, and serves the result via
 GitHub Pages + Releases so users can install with `apt install` or
 `dnf install`.
+
+Sandbox endpoint (active): <https://shiptux.github.io/flagos-packaging>.
+Production endpoint (planned): <https://flagos-ai.github.io/flagos-packaging>.
+
+## Quickstart (sandbox)
+
+**Ubuntu / Debian:**
+
+```sh
+sudo install -d -m 0755 /etc/apt/keyrings
+curl -fsSL https://shiptux.github.io/flagos-packaging/pubkey.gpg | \
+  sudo gpg --dearmor -o /etc/apt/keyrings/flagos.gpg
+
+echo "deb [signed-by=/etc/apt/keyrings/flagos.gpg] \
+  https://shiptux.github.io/flagos-packaging/apt stable main" | \
+  sudo tee /etc/apt/sources.list.d/flagos.list
+
+sudo apt update
+sudo apt install libflagcx-nvidia python3-flagscale python3-flagtree-nvidia
+```
+
+**Fedora / Rocky / OpenEuler:**
+
+```sh
+# <distro>: fedora43 | el8 | el9 | openeuler2403 | opencloudos9 | openanolis8
+sudo curl -fsSL https://shiptux.github.io/flagos-packaging/flagos-<distro>.repo \
+  -o /etc/yum.repos.d/flagos.repo
+sudo dnf makecache -y
+sudo dnf install libflagcx-nvidia python3-flagscale python3-flagtree-nvidia
+```
+
+Full install guide: [`docs/install.md`](./docs/install.md).
+Which packages currently install on which distro: [`docs/compatibility-status.md`](./docs/compatibility-status.md).
 
 ## Architecture
 
