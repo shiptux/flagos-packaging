@@ -20,12 +20,13 @@ Last refresh: 2026-06-06.
 | 8 | flagos-ai/FlagTensor    | pr/packaging            | [#4](https://github.com/flagos-ai/FlagTensor/pull/4)       | OPEN, no review | ask maintainer to approve first-time-contributor CI |
 | 9 | flagos-ai/FlagQuantum   | pr/packaging            | [#4](https://github.com/flagos-ai/FlagQuantum/pull/4)      | OPEN, no review | ask maintainer to approve first-time-contributor CI |
 | 10 | flagos-ai/FlagScale    | pr/packaging            | [#1205](https://github.com/flagos-ai/FlagScale/pull/1205)  | OPEN, no review | body adapted to upstream PR template; `format` / `run_tests` failures are pre-existing |
-| 11 | flagos-ai/FlagCX       | pr/rpm-packaging-clean  | [#476](https://github.com/flagos-ai/FlagCX/pull/476)       | OPEN, no review | fix nvidia / metax RPM build (ascend now passes); close #394 once #476 is reviewed |
+| 11 | flagos-ai/FlagCX       | pr/rpm-packaging-clean  | [#476](https://github.com/flagos-ai/FlagCX/pull/476)       | **MERGED** 2026-06-22 | squash-merged (branch commits not in main's ancestry, content is); RPM packaging is on main |
 | 12 | flagos-ai/libtriton_jit | pr/packaging           | [#24](https://github.com/flagos-ai/libtriton_jit/pull/24)  | OPEN, CLA only  | base `multi-backend`; now targets ubuntu22.04/cu128. Nexus upload caller is [#28](https://github.com/flagos-ai/libtriton_jit/pull/28) |
 | 13 | flagos-ai/FlagFFT      | pr/packaging            | [#12](https://github.com/flagos-ai/FlagFFT/pull/12)        | OPEN, no review  | single-backend (NVIDIA) only; bundles libtriton_jit submodule statically; packaging configs only — build-deb/rpm CI workflow is a follow-up |
 | 14 | flagos-ai/FlagSparse    | pr/openeuler-rpm        | [#29](https://github.com/flagos-ai/FlagSparse/pull/29)     | **MERGED** 2026-07-15 | openEuler 24.03 RPM matrix in main — upstream now produces oe2403 artifacts; follow-up `--prefix /usr` in [#36](https://github.com/flagos-ai/FlagSparse/pull/36) |
 | 15 | flagos-ai/FlagAttention | pr/openeuler-rpm        | [#35](https://github.com/flagos-ai/FlagAttention/pull/35)  | OPEN, review in progress | openEuler 24.03 RPM matrix; F7/F8 fixes; huangyiqun's `--prefix /usr` feedback addressed in 2b3651f, all checks green again — awaiting re-review |
 | 16 | flagos-ai/flagtree      | pr/packaging-openeuler  | [#794](https://github.com/flagos-ai/FlagTree/pull/794)     | OPEN, **APPROVED** (zhzhcookie) | RESTORES #607 packaging (lost in main history rewrite) + openEuler 24.03 cp311; all 18 checks green; **next: ask maintainer to merge** |
+| 17 | flagos-ai/FlagCX       | pr/openeuler-rpm        | [#549](https://github.com/flagos-ai/FlagCX/pull/549)       | OPEN, no review | openEuler 24.03 NVIDIA RPM matrix (same template as FlagSparse#29); built+verified on A100 with NCCL 2.31 (unpinned, tracks current releases); incl. spec changelog-order + comment-macro fixes |
 
 ## CI snapshot — build-deb / build-rpm
 
