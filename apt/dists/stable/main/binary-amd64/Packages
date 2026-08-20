@@ -1,3 +1,114 @@
+Package: libflagcx-nvidia
+Source: flagcx
+Version: 0.8.0-1
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 5862
+Homepage: https://github.com/flagos-ai/FlagCX
+Priority: optional
+Section: libs
+Filename: pool/main/f/flagcx/libflagcx-nvidia_0.8.0-1_amd64.deb
+Size: 876728
+SHA256: 47867ce4945793414daf898607cd271ec4e93e306755240f8404656e2d8f8aa6
+SHA1: 0a66b8eee658bf709f976719a8548aa45deca0f9
+MD5sum: 4d17e9004667dc9f037f8f693e763f21
+Description: FlagCX communication library for NVIDIA hardware
+ FlagCX is a scalable and adaptive cross-chip communication library.
+ It serves as a platform where developers, researchers, and AI engineers
+ can collaborate on various projects.
+ .
+ This package contains the shared library built for NVIDIA hardware with
+ NCCL backend support.
+
+Package: libflagcx-nvidia-dev
+Source: flagcx
+Version: 0.8.0-1
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 86
+Depends: libflagcx-nvidia (= 0.8.0-1)
+Homepage: https://github.com/flagos-ai/FlagCX
+Priority: optional
+Section: libdevel
+Filename: pool/main/f/flagcx/libflagcx-nvidia-dev_0.8.0-1_amd64.deb
+Size: 18874
+SHA256: 375be1e63e53f50839b4c5f6dfa53085eefc2fa962dad2008605bb4b393a4fc2
+SHA1: 5d24ab2692bf173384fde03f53a3c2a76e491ab3
+MD5sum: 350bcf682862ebf76d0fd46498a4f319
+Description: FlagCX development files for NVIDIA hardware
+ FlagCX is a scalable and adaptive cross-chip communication library.
+ .
+ This package contains the header files and development files for
+ building applications against libflagcx-nvidia.
+
+Package: libtriton-jit-nvidia
+Source: libtriton-jit
+Version: 0.1.0-3
+Architecture: amd64
+Maintainer: The FlagOS Contributors <contact@flagos.io>
+Installed-Size: 437
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libstdc++6 (>= 5.2), libpython3.12 (>= 3.12)
+Homepage: https://github.com/flagos-ai/libtriton_jit
+Priority: optional
+Section: libs
+Filename: pool/main/libt/libtriton-jit/libtriton-jit-nvidia_0.1.0-3_amd64.deb
+Size: 174920
+SHA256: d77f58ca2ca1ce2d90890862f0bbf150c5a6f08f1037b572c1be09c0ef932a9c
+SHA1: bf4cd0b7bc763dfac259a5b0e443fea1376d974e
+MD5sum: 8c46fc9d1983d7c140e48d04a5cd962d
+Description: Triton JIT runtime library
+ libtriton_jit is a C++ library providing Triton JIT runtime functionality.
+ It enables just-in-time compilation of Triton kernels for GPU acceleration.
+ .
+ This package contains the shared library.
+
+Package: libtriton-jit-nvidia-dev
+Source: libtriton-jit
+Version: 0.1.0-3
+Architecture: amd64
+Maintainer: The FlagOS Contributors <contact@flagos.io>
+Installed-Size: 165
+Depends: libtriton-jit-nvidia (= 0.1.0-3), libfmt-dev (>= 8.1.1)
+Homepage: https://github.com/flagos-ai/libtriton_jit
+Priority: optional
+Section: libdevel
+Filename: pool/main/libt/libtriton-jit/libtriton-jit-nvidia-dev_0.1.0-3_amd64.deb
+Size: 26040
+SHA256: 942270a9c4cf1ad29140886420863f4a8dab0980e5d879c45dd60f8db8818a9c
+SHA1: b58858f15fbf399f0e016b8e8904e50859cad7c8
+MD5sum: 9583ee295f290078230417281d60de36
+Description: Triton JIT runtime library - development files
+ libtriton_jit is a C++ library providing Triton JIT runtime functionality.
+ It enables just-in-time compilation of Triton kernels for GPU acceleration.
+ .
+ This package contains the development files (headers and CMake configs).
+
+Package: python3-flag-attention
+Source: flag-attention
+Version: 0.3.0-1
+Architecture: all
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 514
+Depends: python3:any, python3-pytest
+Recommends: python3-flagtree-nvidia
+Homepage: https://github.com/flagos-ai/FlagAttention
+Priority: optional
+Section: python
+Filename: pool/main/f/flag-attention/python3-flag-attention_0.3.0-1_all.deb
+Size: 69662
+SHA256: c5a178ad5c7f532ba6a8e6afe2845f9ec9d25c9593e5dcfc1a4b51d816d29e6d
+SHA1: acc6f3373e9d531de11ef92c2a4b8dfd3edfda1b
+MD5sum: ef9b5228be08b7529f75186c10c12597
+Description: FlagAttention — memory-efficient attention operators (Triton)
+ FlagAttention is a collection of memory-efficient attention operators
+ implemented in the Triton language. It targets large-language-model
+ training and inference workloads where the standard PyTorch attention
+ path is memory-bound.
+ .
+ Triton (provided here by python3-flagtree-nvidia or upstream
+ python3-triton) is required at runtime; without it the kernels
+ cannot JIT-compile.
+
 Package: python3-flagsparse
 Source: flagsparse
 Version: 1.0.0-1
