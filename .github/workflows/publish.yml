@@ -52,6 +52,12 @@ jobs:
           workflow_conclusion: success
           name: ${{ matrix.pattern }}
           name_is_regexp: true
+          # Most upstreams only build when packaging/source paths change, so
+          # between merges the freshest artifacts often live on open PR
+          # branches (fork head repos). Collect those too — a PR-branch
+          # snapshot beats an expired (7-day retention) default-branch one.
+          # Once the upstream PRs merge, default-branch runs win on recency.
+          allow_forks: true
           path: collected/${{ matrix.component }}/${{ matrix.format }}/
           if_no_artifact_found: warn
       - name: Check if any artifact was downloaded
