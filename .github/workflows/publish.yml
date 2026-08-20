@@ -93,14 +93,11 @@ jobs:
       - name: Fail loudly if no artifacts to publish
         run: |
           if ! find collected -name '*.deb' -o -name '*.rpm' 2>/dev/null | grep -q .; then
-            echo "::error::No artifacts available from any upstream — nothing to publish."
-            echo "Check that at least one upstream component's build CI has produced a"
-            echo "successful run with artifacts within the last 7 days."
-            echo "To wake an upstream: gh workflow run build-deb.yml --repo <upstream>"
-            exit 1
+            echo "::warning::No FRESH artifacts from upstreams this run (7-day retention"
+            echo "expired everywhere — see docs). Publishing the carried-over set."
           fi
-          echo "Artifacts available:"
-          find collected -name '*.deb' -o -name '*.rpm'
+          echo "Fresh artifacts this run:"
+          find collected -name '*.deb' -o -name '*.rpm' || true
       - name: Install repo tooling
         run: |
           sudo apt-get update -qq
@@ -121,23 +118,36 @@ jobs:
           GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: ./scripts/sign-packages.sh
+      - name: Merge with previously published artifacts
+        # Releases keep binaries forever; upstream CI artifacts expire
+        # after 7 days. Carry the last release's set forward and overlay
+        # today's fresh artifacts so components that didn't rebuild this
+        # week don't vanish from the repo.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ needs.collect.outputs.release_tag }}
+          GH_REPO: ${{ github.repository }}
+        run: ./scripts/merge-artifacts.sh
       - name: Build APT repo
         env:
           GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
           RELEASE_TAG: ${{ needs.collect.outputs.release_tag }}
           GH_REPO: ${{ github.repository }}
+          COLLECTED_DIR: ${{ github.workspace }}/merged
         run: ./scripts/build-apt-repo.sh
       - name: Build YUM repos
         env:
           GPG_KEY_ID: ${{ env.GPG_KEY_ID }}
           RELEASE_TAG: ${{ needs.collect.outputs.release_tag }}
           GH_REPO: ${{ github.repository }}
+          COLLECTED_DIR: ${{ github.workspace }}/merged
         run: ./scripts/build-yum-repo.sh
       - name: Upload binaries to GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_TAG: ${{ needs.collect.outputs.release_tag }}
           GH_REPO: ${{ github.repository }}
+          COLLECTED_DIR: ${{ github.workspace }}/merged
         run: ./scripts/publish-release.sh
       - name: Push metadata to gh-pages
         env:
