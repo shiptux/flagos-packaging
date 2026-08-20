@@ -4,7 +4,7 @@ display_name: libtriton-jit
 workflows:
   deb:
     name: build-deb.yml
-    artifact_pattern: "libtriton-jit-*-packages"
+    artifact_pattern: "libtriton-jit-.*packages"
   rpm:
     name: build-rpm.yml
     artifact_pattern: "libtriton-jit-.*rpm-packages"

@@ -4,7 +4,7 @@ display_name: FlagScale
 workflows:
   deb:
     name: build-deb.yml
-    artifact_pattern: "flagscale-*-packages"
+    artifact_pattern: "flagscale-.*packages"
   rpm:
     name: build-rpm.yml
     artifact_pattern: "flagscale-.*rpm-packages"

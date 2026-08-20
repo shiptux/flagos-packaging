@@ -4,7 +4,7 @@ display_name: FlagGems
 workflows:
   deb:
     name: build-deb.yml
-    artifact_pattern: "flag-gems-*-packages"
+    artifact_pattern: "flag-gems-.*packages"
   rpm:
     name: build-rpm.yml
     artifact_pattern: "flag-gems-.*rpm-packages"

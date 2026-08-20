@@ -4,7 +4,7 @@ display_name: FlagAttention
 workflows:
   deb:
     name: build-deb.yml
-    artifact_pattern: "flag-attention-*-packages"
+    artifact_pattern: "flag-attention-.*packages"
   rpm:
     name: build-rpm.yml
     artifact_pattern: "flag-attention-.*rpm-packages"

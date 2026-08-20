@@ -4,7 +4,7 @@ display_name: FlagDNN
 workflows:
   deb:
     name: build-deb.yml
-    artifact_pattern: "flag-dnn-*-packages"
+    artifact_pattern: "flag-dnn-.*packages"
   rpm:
     name: build-rpm.yml
     artifact_pattern: "flag-dnn-.*rpm-packages"

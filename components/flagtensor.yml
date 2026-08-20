@@ -4,7 +4,7 @@ display_name: FlagTensor
 workflows:
   deb:
     name: build-deb.yml
-    artifact_pattern: "flagtensor-*-packages"
+    artifact_pattern: "flagtensor-.*packages"
   rpm:
     name: build-rpm.yml
     artifact_pattern: "flagtensor-.*rpm-packages"

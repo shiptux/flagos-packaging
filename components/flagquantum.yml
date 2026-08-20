@@ -4,7 +4,7 @@ display_name: FlagQuantum
 workflows:
   deb:
     name: build-deb.yml
-    artifact_pattern: "flagquantum-*-packages"
+    artifact_pattern: "flagquantum-.*packages"
   rpm:
     name: build-rpm.yml
     artifact_pattern: "flagquantum-.*rpm-packages"
