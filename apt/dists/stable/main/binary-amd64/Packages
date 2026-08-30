@@ -88,17 +88,17 @@ Source: flag-attention
 Version: 0.3.0-1
 Architecture: all
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 516
+Installed-Size: 528
 Depends: python3:any, python3-pytest
 Recommends: python3-flagtree-nvidia
 Homepage: https://github.com/flagos-ai/FlagAttention
 Priority: optional
 Section: python
 Filename: pool/main/f/flag-attention/python3-flag-attention_0.3.0-1_all.deb
-Size: 69788
-SHA256: 7da8d86137ef854514d00d7e18f07e43f69044a82eaa06b10816e43cc3b6e3d4
-SHA1: d953056084cb6431b1cf45d09cd2af9e2bc871b0
-MD5sum: 261caf4fe67cc6097c3348318e28d006
+Size: 72420
+SHA256: e584f3533645e1f1a8a4149d4a6416bb13da36668e303180d2b48922a49dcafe
+SHA1: d831652adc20b1d1cf89fa27c5d18fbf14c43f1c
+MD5sum: f685554b59e4d5a060d4004d8c998f84
 Description: FlagAttention — memory-efficient attention operators (Triton)
  FlagAttention is a collection of memory-efficient attention operators
  implemented in the Triton language. It targets large-language-model
@@ -114,16 +114,16 @@ Source: flagsparse
 Version: 1.0.0-1
 Architecture: all
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 1166
+Installed-Size: 1218
 Depends: python3:any
 Homepage: https://github.com/flagos-ai/FlagSparse
 Priority: optional
 Section: python
 Filename: pool/main/f/flagsparse/python3-flagsparse_1.0.0-1_all.deb
-Size: 130384
-SHA256: 0a392c93ef7eda34eed97d8aa1e04cbf4f01bcd54e7b16afd2e4f8f52d85b94e
-SHA1: 35322da3b536437b5f4867be385fd57b322e6622
-MD5sum: 4bd64d367cb7b74d03524b188d454889
+Size: 135914
+SHA256: 9a722fa82ced7e1a94dc637ab3a162121530e981b1422632dfe36246866652b8
+SHA1: 09b26f065a0574f854303504b9393e478e512273
+MD5sum: f07e16216e0a1ea738729d8058c83710
 Description: FlagSparse — sparse compute kernels for FlagOS
  Sparse-matrix operators (SpMM, SpMV, sampled dense-dense) for FlagOS-supported accelerators.
 
