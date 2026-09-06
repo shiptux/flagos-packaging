@@ -1,17 +1,17 @@
 Package: libflagcx-nvidia
 Source: flagcx
-Version: 0.8.0-1
+Version: 0.13.0-rc0.1-1
 Architecture: amd64
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 5862
+Installed-Size: 6063
 Homepage: https://github.com/flagos-ai/FlagCX
 Priority: optional
 Section: libs
-Filename: pool/main/f/flagcx/libflagcx-nvidia_0.8.0-1_amd64.deb
-Size: 876728
-SHA256: 47867ce4945793414daf898607cd271ec4e93e306755240f8404656e2d8f8aa6
-SHA1: 0a66b8eee658bf709f976719a8548aa45deca0f9
-MD5sum: 4d17e9004667dc9f037f8f693e763f21
+Filename: pool/main/f/flagcx/libflagcx-nvidia_0.13.0-rc0.1-1_amd64.deb
+Size: 916390
+SHA256: 4534e6913fe78b435763e6bffe1fdd86f77ce64a981d881cb524fbbd054b7ddc
+SHA1: 09c8a838eb9ab0b668e0e29bf48b5aa79b4cbf33
+MD5sum: e95e1e34d487b17ea81b4039ce411444
 Description: FlagCX communication library for NVIDIA hardware
  FlagCX is a scalable and adaptive cross-chip communication library.
  It serves as a platform where developers, researchers, and AI engineers
@@ -22,19 +22,19 @@ Description: FlagCX communication library for NVIDIA hardware
 
 Package: libflagcx-nvidia-dev
 Source: flagcx
-Version: 0.8.0-1
+Version: 0.13.0-rc0.1-1
 Architecture: amd64
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 86
-Depends: libflagcx-nvidia (= 0.8.0-1)
+Installed-Size: 90
+Depends: libflagcx-nvidia (= 0.13.0-rc0.1-1)
 Homepage: https://github.com/flagos-ai/FlagCX
 Priority: optional
 Section: libdevel
-Filename: pool/main/f/flagcx/libflagcx-nvidia-dev_0.8.0-1_amd64.deb
-Size: 18874
-SHA256: 375be1e63e53f50839b4c5f6dfa53085eefc2fa962dad2008605bb4b393a4fc2
-SHA1: 5d24ab2692bf173384fde03f53a3c2a76e491ab3
-MD5sum: 350bcf682862ebf76d0fd46498a4f319
+Filename: pool/main/f/flagcx/libflagcx-nvidia-dev_0.13.0-rc0.1-1_amd64.deb
+Size: 22618
+SHA256: dc148c25059e57d5902b3362ed55cf36223c3db48a787bba41057d3952168dca
+SHA1: 65ea9597907f395e0be3df5fd5eeb5e8d829accf
+MD5sum: 29c7a4131872d3fc183ff2c2b0957d6e
 Description: FlagCX development files for NVIDIA hardware
  FlagCX is a scalable and adaptive cross-chip communication library.
  .
@@ -88,17 +88,17 @@ Source: flag-attention
 Version: 0.3.0-1
 Architecture: all
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 528
+Installed-Size: 514
 Depends: python3:any, python3-pytest
 Recommends: python3-flagtree-nvidia
 Homepage: https://github.com/flagos-ai/FlagAttention
 Priority: optional
 Section: python
 Filename: pool/main/f/flag-attention/python3-flag-attention_0.3.0-1_all.deb
-Size: 72420
-SHA256: e584f3533645e1f1a8a4149d4a6416bb13da36668e303180d2b48922a49dcafe
-SHA1: d831652adc20b1d1cf89fa27c5d18fbf14c43f1c
-MD5sum: f685554b59e4d5a060d4004d8c998f84
+Size: 69662
+SHA256: 8b4ce6fbb1d87c7537328c1c2d41fec712671f790f7fbd122f7a0769d1d71d5e
+SHA1: 56efa0110108a39cf20eac961e686b5441b4ebe7
+MD5sum: c88166c0ded303ed933efa763f9b69cf
 Description: FlagAttention — memory-efficient attention operators (Triton)
  FlagAttention is a collection of memory-efficient attention operators
  implemented in the Triton language. It targets large-language-model
@@ -114,16 +114,16 @@ Source: flagsparse
 Version: 1.0.0-1
 Architecture: all
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 1218
+Installed-Size: 1245
 Depends: python3:any
 Homepage: https://github.com/flagos-ai/FlagSparse
 Priority: optional
 Section: python
 Filename: pool/main/f/flagsparse/python3-flagsparse_1.0.0-1_all.deb
-Size: 135914
-SHA256: 9a722fa82ced7e1a94dc637ab3a162121530e981b1422632dfe36246866652b8
-SHA1: 09b26f065a0574f854303504b9393e478e512273
-MD5sum: f07e16216e0a1ea738729d8058c83710
+Size: 141670
+SHA256: 091e876c274a466c2fb8cbd9979739c643e7810ff9b911c21ec56f77183b271e
+SHA1: 5ebe564be9104cf02eb499c9bae1aa02258cd931
+MD5sum: 4e7261285f503f322d57e4820ed2ebc8
 Description: FlagSparse — sparse compute kernels for FlagOS
  Sparse-matrix operators (SpMM, SpMV, sampled dense-dense) for FlagOS-supported accelerators.
 

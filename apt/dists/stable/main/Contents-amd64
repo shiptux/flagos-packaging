@@ -25,7 +25,6 @@ usr/lib/libflagcx.so.0	    libs/libflagcx-nvidia
 usr/lib/libflagcx.so.0.1.0	    libs/libflagcx-nvidia
 usr/lib/python3/dist-packages/flag_attn/__init__.py	    python/python3-flag-attention
 usr/lib/python3/dist-packages/flag_attn/_version.py	    python/python3-flag-attention
-usr/lib/python3/dist-packages/flag_attn/attnres.py	    python/python3-flag-attention
 usr/lib/python3/dist-packages/flag_attn/dropout.py	    python/python3-flag-attention
 usr/lib/python3/dist-packages/flag_attn/flash.py	    python/python3-flag-attention
 usr/lib/python3/dist-packages/flag_attn/paged.py	    python/python3-flag-attention
@@ -67,7 +66,6 @@ usr/lib/python3/dist-packages/flag_attn/runtime/backend/_metax/__init__.py	    p
 usr/lib/python3/dist-packages/flag_attn/runtime/backend/_mthreads/__init__.py	    python/python3-flag-attention
 usr/lib/python3/dist-packages/flag_attn/runtime/backend/_nvidia/__init__.py	    python/python3-flag-attention
 usr/lib/python3/dist-packages/flag_attn/testing/__init__.py	    python/python3-flag-attention
-usr/lib/python3/dist-packages/flag_attn/testing/attnres.py	    python/python3-flag-attention
 usr/lib/python3/dist-packages/flag_attn/testing/dropout.py	    python/python3-flag-attention
 usr/lib/python3/dist-packages/flag_attn/testing/flash.py	    python/python3-flag-attention
 usr/lib/python3/dist-packages/flag_attn/testing/paged.py	    python/python3-flag-attention
