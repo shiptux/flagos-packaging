@@ -1,17 +1,17 @@
 Package: libflagcx-nvidia
 Source: flagcx
-Version: 0.13.0-rc0.1-1
+Version: 0.14.0-rc2.post1-1
 Architecture: amd64
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 6003
+Installed-Size: 6002
 Homepage: https://github.com/flagos-ai/FlagCX
 Priority: optional
 Section: libs
-Filename: pool/main/f/flagcx/libflagcx-nvidia_0.13.0-rc0.1-1_amd64.deb
-Size: 914312
-SHA256: 1d33034e8f93e03785eade72c53d1b75d7dfd4ee6fc243427e0a410f679b4547
-SHA1: 046e2dc8bcaab877ae08ee160c099bd11e0cf793
-MD5sum: e39381235550ae4eda29775b56602dcd
+Filename: pool/main/f/flagcx/libflagcx-nvidia_0.14.0-rc2.post1-1_amd64.deb
+Size: 907714
+SHA256: d06bb1b2b4f48e257c19c08c533cf59222882a0b8eda1be9b866d265b7985ad0
+SHA1: 8b7ed3885b8498aa9f764c372fa9c082a7777841
+MD5sum: c73209a85661f658071812ee9718c991
 Description: FlagCX communication library for NVIDIA hardware
  FlagCX is a scalable and adaptive cross-chip communication library.
  It serves as a platform where developers, researchers, and AI engineers
@@ -22,40 +22,166 @@ Description: FlagCX communication library for NVIDIA hardware
 
 Package: libflagcx-nvidia-dev
 Source: flagcx
-Version: 0.13.0-rc0.1-1
+Version: 0.14.0-rc2.post1-1
 Architecture: amd64
 Maintainer: FlagOS Contributors <contact@flagos.io>
 Installed-Size: 91
-Depends: libflagcx-nvidia (= 0.13.0-rc0.1-1)
+Depends: libflagcx-nvidia (= 0.14.0-rc2.post1-1)
 Homepage: https://github.com/flagos-ai/FlagCX
 Priority: optional
 Section: libdevel
-Filename: pool/main/f/flagcx/libflagcx-nvidia-dev_0.13.0-rc0.1-1_amd64.deb
-Size: 22866
-SHA256: ed7668871b0709cd1f3e38a5df19b999c639f2186ae51e4c3f807cbf867a05e2
-SHA1: 6c09a0dccd38bef64412371f4b2f83f6f4893ce9
-MD5sum: 85395d6fef483d4356aca802bd5ffb31
+Filename: pool/main/f/flagcx/libflagcx-nvidia-dev_0.14.0-rc2.post1-1_amd64.deb
+Size: 22500
+SHA256: e5121471f1a73b583ef915e662bb02e8753983c10963f2680badade2cc263d4d
+SHA1: fcd0037cc0d0619726bd140da0f9f037bc19f8ae
+MD5sum: cfc5b3ca7c928472766016562ab006bf
 Description: FlagCX development files for NVIDIA hardware
  FlagCX is a scalable and adaptive cross-chip communication library.
  .
  This package contains the header files and development files for
  building applications against libflagcx-nvidia.
 
+Package: libflagdnn-nvidia
+Source: flag-dnn
+Version: 0.2.0-2
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 2237
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libstdc++6 (>= 11), libpython3.12 (>= 3.12), libtriton-jit-nvidia (>= 0.1.0-3), python3, python3-yaml
+Homepage: https://github.com/flagos-ai/FlagDNN
+Priority: optional
+Section: libs
+Filename: pool/main/f/flag-dnn/libflagdnn-nvidia_0.2.0-2_amd64.deb
+Size: 408802
+SHA256: 8399953a35221805ea430d1cec36eaf374b0c8281eb7b323bc968b07320bde27
+SHA1: 1e420c4fa7a6e544d7704cf5e47019dc81fad22f
+MD5sum: 381da919c961f21fcef16cc7036542ad
+Description: FlagDNN native graph runtime (NVIDIA backend)
+ FlagDNN provides a native C/C++ graph runtime and a dynamically loaded NVIDIA
+ backend using CUDA and the system Triton JIT runtime. This package contains
+ the shared libraries, compiler providers, kernels, registries, and tuning data.
+
+Package: libflagdnn-nvidia-dev
+Source: flag-dnn
+Version: 0.2.0-2
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 231
+Depends: libflagdnn-nvidia (= 0.2.0-2), libtriton-jit-nvidia-dev (>= 0.1.0-3)
+Homepage: https://github.com/flagos-ai/FlagDNN
+Priority: optional
+Section: libdevel
+Filename: pool/main/f/flag-dnn/libflagdnn-nvidia-dev_0.2.0-2_amd64.deb
+Size: 29642
+SHA256: 1a15efb1e33750a50c8870f9890d4446af3d618e2d8f8ccd3f80542719a4e162
+SHA1: f1ad8cf117df762208694b71cc9711d289ecf786
+MD5sum: a06e3f582ac998bf3ad5f10458a03a5c
+Description: FlagDNN development files (NVIDIA backend)
+ C/C++ headers and CMake package files for applications using FlagDNN.
+
+Package: libflagfft-nvidia
+Source: libflagfft
+Version: 0.2.0-1
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 1713
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libpython3.12 (>= 3.12), libsqlite3-0 (>= 3.5.9), libstdc++6 (>= 5.2), python3.12
+Homepage: https://github.com/flagos-ai/FlagFFT
+Priority: optional
+Section: libs
+Filename: pool/main/libf/libflagfft/libflagfft-nvidia_0.2.0-1_amd64.deb
+Size: 488860
+SHA256: 55fa131edd8975f95e4212e78b7e165843904e1f188de22388dd72aede214223
+SHA1: 73354e8954fbb3487ac970187be70e79fab169d5
+MD5sum: 20c393d9b376db3458716fe69e26e9bd
+Description: FlagFFT — C++ FFT library for FlagOS (NVIDIA backend)
+ FlagFFT is a cuFFT-style FFT library with Triton/TLE code generation,
+ targeting FlagOS multi-vendor accelerators. The NVIDIA backend uses
+ CUDA + Triton-JIT for kernel generation.
+ .
+ This package contains libflagfft.so, its private
+ libflagfft_triton_jit.so dependency, and the flagfft_codegen Python package
+ invoked at plan creation time.
+ .
+ The JIT code generator requires Python 3.12 (the interpreter libflagfft
+ embeds). On Ubuntu 22.04, where the default python3 is 3.10, install
+ python3.12 (e.g. from the deadsnakes PPA) and set FLAGFFT_PYTHON=python3.12;
+ on Ubuntu 24.04 the default python3 already is 3.12. It does not require the separately packaged
+ libtriton-jit runtime.
+
+Package: libflagfft-nvidia-dev
+Source: libflagfft
+Version: 0.2.0-1
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 14
+Depends: libflagfft-nvidia (= 0.2.0-1)
+Homepage: https://github.com/flagos-ai/FlagFFT
+Priority: optional
+Section: libdevel
+Filename: pool/main/libf/libflagfft/libflagfft-nvidia-dev_0.2.0-1_amd64.deb
+Size: 3096
+SHA256: 4f9dd317c1851b246ca1177b2c1361a09e40ee81f390dea466d12ec40f5473c4
+SHA1: 137b9f56730937333ea1f9451bc42f3d1389c12f
+MD5sum: b04aaf6fae542ee1b502a6fbe250b812
+Description: FlagFFT development files (NVIDIA backend)
+ FlagFFT is a cuFFT-style FFT library with Triton/TLE code generation.
+ .
+ This package contains the header files for building applications against
+ libflagfft-nvidia.
+
+Package: libflagtensor-nvidia
+Source: flagtensor
+Version: 0.2.0-1
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 232
+Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libstdc++6 (>= 5.2), libtriton-jit-nvidia (>= 0.1.0-3)
+Homepage: https://github.com/flagos-ai/FlagTensor
+Priority: optional
+Section: libs
+Filename: pool/main/f/flagtensor/libflagtensor-nvidia_0.2.0-1_amd64.deb
+Size: 92820
+SHA256: 7245966dd6af9dfe1aa4cfca9e9405622a7fb226bcbf11276284465a65fedb28
+SHA1: 352881983941a1fb044716181aed94110b789649
+MD5sum: eef888a3bf0001632bfe5b90ea9ebfc3
+Description: FlagTensor C++ operator runtime (NVIDIA backend)
+ Native FlagTensor operators backed by CUDA and the system Triton JIT runtime.
+ This package also contains the Triton kernel sources used at runtime.
+
+Package: libflagtensor-nvidia-dev
+Source: flagtensor
+Version: 0.2.0-1
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 34
+Depends: libflagtensor-nvidia (= 0.2.0-1), libtriton-jit-nvidia-dev (>= 0.1.0-3)
+Homepage: https://github.com/flagos-ai/FlagTensor
+Priority: optional
+Section: libdevel
+Filename: pool/main/f/flagtensor/libflagtensor-nvidia-dev_0.2.0-1_amd64.deb
+Size: 6966
+SHA256: d569a993a3a786e21d5487535a32db38cf038da8cefa9d322312bbf23d6e93c0
+SHA1: 235d1b0aee733beda51321520f2222f429008a4a
+MD5sum: 9324d1377a14bb6d231c0c25140867f1
+Description: FlagTensor C++ development files (NVIDIA backend)
+ Headers and CMake package files for applications using FlagTensor operators.
+
 Package: libtriton-jit-nvidia
 Source: libtriton-jit
 Version: 0.1.0-3
 Architecture: amd64
 Maintainer: The FlagOS Contributors <contact@flagos.io>
-Installed-Size: 437
+Installed-Size: 420
 Depends: libc6 (>= 2.34), libgcc-s1 (>= 3.3.1), libstdc++6 (>= 5.2), libpython3.12 (>= 3.12)
 Homepage: https://github.com/flagos-ai/libtriton_jit
 Priority: optional
 Section: libs
 Filename: pool/main/libt/libtriton-jit/libtriton-jit-nvidia_0.1.0-3_amd64.deb
-Size: 174920
-SHA256: d77f58ca2ca1ce2d90890862f0bbf150c5a6f08f1037b572c1be09c0ef932a9c
-SHA1: bf4cd0b7bc763dfac259a5b0e443fea1376d974e
-MD5sum: 8c46fc9d1983d7c140e48d04a5cd962d
+Size: 169114
+SHA256: b9f030b9a49cbef3060ebfbd4f5ef34ab2c7514939ab67c4a29f48102ce16d21
+SHA1: 2a8605c1ae857ce37720f5cfeeddb02db6273cb7
+MD5sum: 70b3d9dc1c4c788730e3569c114acf5b
 Description: Triton JIT runtime library
  libtriton_jit is a C++ library providing Triton JIT runtime functionality.
  It enables just-in-time compilation of Triton kernels for GPU acceleration.
@@ -67,16 +193,16 @@ Source: libtriton-jit
 Version: 0.1.0-3
 Architecture: amd64
 Maintainer: The FlagOS Contributors <contact@flagos.io>
-Installed-Size: 165
+Installed-Size: 163
 Depends: libtriton-jit-nvidia (= 0.1.0-3), libfmt-dev (>= 8.1.1)
 Homepage: https://github.com/flagos-ai/libtriton_jit
 Priority: optional
 Section: libdevel
 Filename: pool/main/libt/libtriton-jit/libtriton-jit-nvidia-dev_0.1.0-3_amd64.deb
-Size: 26040
-SHA256: 942270a9c4cf1ad29140886420863f4a8dab0980e5d879c45dd60f8db8818a9c
-SHA1: b58858f15fbf399f0e016b8e8904e50859cad7c8
-MD5sum: 9583ee295f290078230417281d60de36
+Size: 25026
+SHA256: 5f3bafd83044536be752f1de13e5dc41e5e0e2a6a18e6d4b5a70ccf65a28e232
+SHA1: db34f2348532e0c89e057a6745367e9963ae8cb2
+MD5sum: 21d308459c2bf94d76f8b863fd32ca7c
 Description: Triton JIT runtime library - development files
  libtriton_jit is a C++ library providing Triton JIT runtime functionality.
  It enables just-in-time compilation of Triton kernels for GPU acceleration.
@@ -88,17 +214,17 @@ Source: flag-attention
 Version: 0.3.0-1
 Architecture: all
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 573
+Installed-Size: 3926
 Depends: python3:any, python3-pytest
 Recommends: python3-flagtree-nvidia
 Homepage: https://github.com/flagos-ai/FlagAttention
 Priority: optional
 Section: python
 Filename: pool/main/f/flag-attention/python3-flag-attention_0.3.0-1_all.deb
-Size: 77456
-SHA256: 10ece550a5917f1c7d02295fcc9bbb4088d153229c8abd81f49db9330016d613
-SHA1: 883fb38cbcafd6d35edd7deaeb941780794fc190
-MD5sum: 824114d81fa247263d3fc7ed681fae71
+Size: 261920
+SHA256: 3b0c8487fd464ffd2769881d1d1e6bbe5ce1915db2fe8a3685c11b62b045cc30
+SHA1: e22a36559de321fbea5aa86033fbfef1f1460ba4
+MD5sum: 491e7891cea90481f313123db63411c8
 Description: FlagAttention — memory-efficient attention operators (Triton)
  FlagAttention is a collection of memory-efficient attention operators
  implemented in the Triton language. It targets large-language-model
@@ -109,21 +235,154 @@ Description: FlagAttention — memory-efficient attention operators (Triton)
  python3-triton) is required at runtime; without it the kernels
  cannot JIT-compile.
 
+Package: python3-flag-audio
+Source: flag-audio
+Version: 0.3.0-1
+Architecture: all
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 299
+Depends: python3:any, python3-yaml, python3-sqlalchemy, python3-packaging
+Homepage: https://github.com/flagos-ai/FlagAudio
+Priority: optional
+Section: python
+Filename: pool/main/f/flag-audio/python3-flag-audio_0.3.0-1_all.deb
+Size: 48660
+SHA256: d0e105cc85e60a8c1cac7828bb0726472ab6a3e49f5b611e8b146617c2c18694
+SHA1: 28e2ab0e26f23cb58a3fdcfa027bc6d2f5482875
+MD5sum: 724773128f8f0454e33000b71ac08826
+Description: FlagAudio — audio processing kernels for FlagOS
+ Audio-domain operators (mel spectrogram, STFT/iSTFT, resampling) accelerated via Triton on FlagOS hardware.
+
+Package: python3-flag-blas
+Source: flag-blas
+Version: 0.3.0-1
+Architecture: all
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 2384
+Depends: python3:any, python3-yaml, python3-sqlalchemy, python3-packaging, python3-pybind11
+Homepage: https://github.com/flagos-ai/FlagBLAS
+Priority: optional
+Section: python
+Filename: pool/main/f/flag-blas/python3-flag-blas_0.3.0-1_all.deb
+Size: 149200
+SHA256: 6df6900e7a7830123591ee2848755816be8c31fcaf74a50b325fb9269876affb
+SHA1: e9333e76727cc054a53f46b1686314e1557e0a2e
+MD5sum: 2621a5ca71e316bfcab800e549c2f860
+Description: FlagBLAS — linear-algebra kernels for FlagOS
+ GEMM and related BLAS-level operators implemented in Triton, targeting FlagOS multi-vendor accelerators.
+
+Package: python3-flag-gems
+Source: flag-gems
+Version: 5.3.5-1
+Architecture: all
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 38537
+Depends: python3:any, python3-numpy, python3-yaml, python3-sqlalchemy (>= 1.4.31), python3-packaging
+Recommends: python3-flagtree-nvidia
+Suggests: python3-pytest
+Provides: python3-flaggems
+Homepage: https://github.com/flagos-ai/FlagGems
+Priority: optional
+Section: python
+Filename: pool/main/f/flag-gems/python3-flag-gems_5.3.5-1_all.deb
+Size: 3916316
+SHA256: d51ecafe9d78c7b8dc69ccfcd613ea00257e2d11c711676ee441fb5fae1eb5f1
+SHA1: e164f643ce395f734da42e38975b76cb2216867c
+MD5sum: a8a8e79a7eb25f47931dc1b00ca424e5
+Description: FlagGems GPU operator library (Python module)
+ FlagGems is a GPU operator library written in Triton, providing a
+ drop-in replacement for many torch.* operations with custom-tuned
+ kernels.
+ .
+ This package contains the Python module: the Triton kernel sources and
+ Python wrappers, plus the bundled operator test (flaggems_tests) and
+ benchmark (flaggems_benchmark) suites. The optional C++ wrapped
+ operators (upstream's per-vendor flag-gems-cpp-* native wheels, built
+ from the cpp/ tree) are not packaged yet — see Phase 2 below.
+
 Package: python3-flagsparse
 Source: flagsparse
 Version: 1.0.0-1
 Architecture: all
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 1417
+Installed-Size: 1560
 Depends: python3:any
 Homepage: https://github.com/flagos-ai/FlagSparse
 Priority: optional
 Section: python
 Filename: pool/main/f/flagsparse/python3-flagsparse_1.0.0-1_all.deb
-Size: 167604
-SHA256: 70e4003c1d61f38d1aa879f261fc72175ecb04b1fe9085d5672378e6f2dc57af
-SHA1: 9c625112ce3c3eb8322d75c4981512bbecb6545d
-MD5sum: 5b864e5d7711d9f3988f1e5f1ad9b0ad
+Size: 193858
+SHA256: c5f32b2c3d7927b5c2fd7323c7de6de179184b69a6f86374f0bf97e0693d7bcc
+SHA1: 616d2ba651723617d4844ff3e712299bab58e159
+MD5sum: f4d861d20154a835dd775a9725b467a8
 Description: FlagSparse — sparse compute kernels for FlagOS
  Sparse-matrix operators (SpMM, SpMV, sampled dense-dense) for FlagOS-supported accelerators.
+
+Package: python3-flagtensor
+Source: flagtensor
+Version: 0.2.0-1
+Architecture: all
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 641
+Depends: python3:any, python3-openpyxl, python3-yaml
+Suggests: python3-flagtensor-nvidia
+Homepage: https://github.com/flagos-ai/FlagTensor
+Priority: optional
+Section: python
+Filename: pool/main/f/flagtensor/python3-flagtensor_0.2.0-1_all.deb
+Size: 81982
+SHA256: dfcbe7fdf72264ace662240158d08bca951e4c40eced8f8075659a2583d83dce
+SHA1: 2772326ea0c307258eb5588762de2f2e18ee83ac
+MD5sum: ee92a55203ba7bbb0099f19a9ab29f14
+Description: FlagTensor Python operators for FlagOS
+ Python tensor operators and backend registration used by FlagOS workloads.
+ GPU-enabled PyTorch, Triton, and ABI-matched matplotlib are supplied by the
+ selected backend runtime.
+
+Package: python3-flagtensor-nvidia
+Source: flagtensor
+Version: 0.2.0-1
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 191
+Depends: libc6 (>= 2.32), libflagtensor-nvidia (= 0.2.0-1), libgcc-s1 (>= 3.3.1), libstdc++6 (>= 5.2), python3.12, python3-flagtensor (= 0.2.0-1)
+Homepage: https://github.com/flagos-ai/FlagTensor
+Priority: optional
+Section: python
+Filename: pool/main/f/flagtensor/python3-flagtensor-nvidia_0.2.0-1_amd64.deb
+Size: 70186
+SHA256: 0e041dea23bbd81596013f04dd2fb08206f2af9688ecec8b676cae5b6f1716d7
+SHA1: 9b41c1d6831f7839248ff9e15b66415d1be1f77c
+MD5sum: 1e1e6534397053fe27fe8bef5bea753a
+Description: FlagTensor Python C++ extension (NVIDIA backend)
+ Python bindings for the native NVIDIA FlagTensor operator runtime.
+
+Package: python3-flagtree-nvidia
+Source: flagtree
+Version: 0.6.1-1+ubuntu24.04
+Architecture: amd64
+Maintainer: FlagOS Contributors <contact@flagos.io>
+Installed-Size: 422593
+Depends: python3.12, libc6 (>= 2.38), libgcc-s1 (>= 4.2), libstdc++6 (>= 13.1), zlib1g (>= 1:1.2.2), python3-filelock, python3-setuptools
+Recommends: python3-numpy
+Conflicts: python3-flagtree-amd, python3-flagtree-cambricon, python3-flagtree-hcu, python3-flagtree-iluvatar, python3-flagtree-metax, python3-flagtree-mthreads, python3-flagtree-xpu, python3-triton
+Replaces: python3-triton
+Provides: python3-flagtree, python3-triton
+Homepage: https://github.com/flagos-ai/FlagTree
+Priority: optional
+Section: python
+Filename: pool/main/f/flagtree/python3-flagtree-nvidia_0.6.1-1+ubuntu24.04_amd64.deb
+Size: 82447940
+SHA256: 9d15d473a3c4ba0cfbec79792161a8e5381fce9b4b8c186484ee1bbc1dc74d31
+SHA1: 67a22b49aa63ed93f127965365438f6871b71df1
+MD5sum: 272d244a06a7bba701bbfafc34499775
+Description: FlagTree compiler with NVIDIA backend
+ FlagTree is a unified compiler supporting multiple AI chip backends for
+ custom Deep Learning operations, forked from triton-lang/triton.
+ .
+ This package contains the FlagTree Python distribution built with the NVIDIA
+ backend enabled. It installs into the "triton" Python namespace and conflicts
+ with the upstream python3-triton package.
+ .
+ Requires CUDA runtime to execute kernels on NVIDIA GPUs at runtime.
 
