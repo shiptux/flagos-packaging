@@ -2,31 +2,31 @@ Origin: FlagOS
 Label: FlagOS
 Suite: stable
 Codename: stable
-Date: Sun, 04 Oct 2026 21:15:14 UTC
+Date: Sun, 11 Oct 2026 21:47:06 UTC
 Architectures: amd64
 Components: main
 Description: FlagOS unified package distribution
 MD5Sum:
- 25b1713c8aab206febd96bd0c769248d 12917 main/binary-amd64/Packages
- 3ed35ae17944706eb15da8059c54d711 4053 main/binary-amd64/Packages.gz
- 3724f4e400dc98cdd5a04d0200ac14a0 3953 main/binary-amd64/Packages.bz2
+ b4faa67c1452e7e2d2963e005de4f77b 12915 main/binary-amd64/Packages
+ fd0fd0c96a144c1907de3e7401c66357 4048 main/binary-amd64/Packages.gz
+ 57c4510fa7bf46496c364deb58b73c0e 3937 main/binary-amd64/Packages.bz2
  73a9382a9899b4604b67e3238bb19004 130 main/binary-amd64/Release
- 6cd7ee0867ca0013c8a7780c86096b67 503880 main/Contents-amd64
- d82a208904f5abaf7792dee7630016b9 29972 main/Contents-amd64.gz
- 084db511df84e169e056c911f006f0a3 18185 main/Contents-amd64.bz2
+ 3a06c45ef7dbdb8706e2ea49d25fdb54 474639 main/Contents-amd64
+ cffe8a11874115556cee93de178e92b5 28656 main/Contents-amd64.gz
+ 8f1cc50e8c124b48f3025a6bfac2e693 17343 main/Contents-amd64.bz2
 SHA1:
- c58c26d0e59c007d728093c9b24726c0980f92f3 12917 main/binary-amd64/Packages
- 6a426ff0eb58da582f28ad1c6b66e9d2e2e30261 4053 main/binary-amd64/Packages.gz
- f90663032938e8015f735bd06254b4ee1de1db8c 3953 main/binary-amd64/Packages.bz2
+ 91ceabc545bdc8d6311f6289dae50e74dcfb609f 12915 main/binary-amd64/Packages
+ 5a1cc66f3802f6eb4ab4909f39e768a11bd1f92c 4048 main/binary-amd64/Packages.gz
+ c7e0410b3a48d3e51bdf7f747356424f44dbd8a9 3937 main/binary-amd64/Packages.bz2
  0dbf3ca95e86c601f8cdf7077db972ab072605a8 130 main/binary-amd64/Release
- 45207f83566ee175d55b357330de34cd85354f6e 503880 main/Contents-amd64
- 6aa21a884215fe173f6e4dbb2d388b4c7a718ae7 29972 main/Contents-amd64.gz
- 219d3818e32fe3e5c50b45908097e1f88d2684cd 18185 main/Contents-amd64.bz2
+ 88ba251e9df7929e5573da1dbc99ec3c61a2eab4 474639 main/Contents-amd64
+ dbcfab093501324ceb3b46c34c262ec3a3af93a0 28656 main/Contents-amd64.gz
+ 0576a0eff275b4b199a62485f618301e7dff546a 17343 main/Contents-amd64.bz2
 SHA256:
- 44e8b9f16baa8ca366668e207708801bdc416fc5ab5d79183656119890ec6151 12917 main/binary-amd64/Packages
- 2d40bd72e1cae327c94d22456771e82d255d7f3d3356df1a78c19d37b5e71061 4053 main/binary-amd64/Packages.gz
- 2d5a1f8f7a1e399500b4946f95a14c877e5fc1faf04ceff4b4e65abc37655685 3953 main/binary-amd64/Packages.bz2
+ 0c405dcd57a9c3e05b4b26755a77abaa1c0a4202c86accfd683f6cef975e19e4 12915 main/binary-amd64/Packages
+ ec0ffe9e78144de9940a94f6b5cf6e56760c6ee184818f467127279633ef545f 4048 main/binary-amd64/Packages.gz
+ 813488989752450d6089ef567e1edb3276d527298b54e1dd6b6882b65550299f 3937 main/binary-amd64/Packages.bz2
  16782128c0d2cc4803102178bd609faad2280d5e66a042491320358f4078c7e7 130 main/binary-amd64/Release
- 2130b733054d29062eb4964749cf10d2dde91e93032a252e258b6085d07726aa 503880 main/Contents-amd64
- d5292263365be6dda6575cb97bbceca53a0519d560c5987ad8951cab31c336d7 29972 main/Contents-amd64.gz
- 1c1e2e2cb1ba1b2ae059598f1690c9f3b9015f6d262024f5b590a71fe50d0258 18185 main/Contents-amd64.bz2
+ 51f98f8e6608326d5e1a5529ad54958d219c2a91b852a543f79df3396b7d08e7 474639 main/Contents-amd64
+ 0059f011174ea799f8d3b3cafa39d53ee48e698bc82cc8abd97e9b73c01fdc71 28656 main/Contents-amd64.gz
+ 0face009523d6211a0e0485792bfa46a736174d815c6c236f098a242caeddb33 17343 main/Contents-amd64.bz2

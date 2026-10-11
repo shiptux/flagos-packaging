@@ -168,20 +168,20 @@ Description: Triton JIT runtime library - development files
 
 Package: python3-flag-attention
 Source: flag-attention
-Version: 0.4.0-1
+Version: 0.3.0-1
 Architecture: all
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 3656
+Installed-Size: 283
 Depends: python3:any, python3-pytest
 Recommends: python3-flagtree-nvidia
 Homepage: https://github.com/flagos-ai/FlagAttention
 Priority: optional
 Section: python
-Filename: pool/main/f/flag-attention/python3-flag-attention_0.4.0-1_all.deb
-Size: 220930
-SHA256: c7fb619fb01d47546d7577583dcaf5cab72eb2a0484264b66b1bc609f743456c
-SHA1: 724880705a71e5f4b03c5d701c689bb41929f607
-MD5sum: 8b879fe2a8f5817e66acf0636f58e579
+Filename: pool/main/f/flag-attention/python3-flag-attention_0.3.0-1_all.deb
+Size: 41696
+SHA256: 1535fd92d9d5824a0db7df5e8bc3139455223b46eb1d466c67d883722eef3b14
+SHA1: 1e81c7dd4a30b1352f9b957ab66025903dd269b8
+MD5sum: b4003e1ea911c8409ba13b29923a1d47
 Description: FlagAttention — memory-efficient attention operators (Triton)
  FlagAttention is a collection of memory-efficient attention operators
  implemented in the Triton language. It targets large-language-model
@@ -215,16 +215,16 @@ Source: flag-blas
 Version: 0.3.0-1
 Architecture: all
 Maintainer: FlagOS Contributors <contact@flagos.io>
-Installed-Size: 3663
+Installed-Size: 2384
 Depends: python3:any, python3-yaml, python3-sqlalchemy, python3-packaging, python3-pybind11
 Homepage: https://github.com/flagos-ai/FlagBLAS
 Priority: optional
 Section: python
 Filename: pool/main/f/flag-blas/python3-flag-blas_0.3.0-1_all.deb
-Size: 272472
-SHA256: 1bedd9b03d3a9638ed490affeb8820583c704d02dbaba4ede367ae5786c064f6
-SHA1: 824b005b2a6c16b3e9774d52b73bcbd981870b5c
-MD5sum: fa04f25bf8e246303561227022cdff2c
+Size: 149200
+SHA256: 6df6900e7a7830123591ee2848755816be8c31fcaf74a50b325fb9269876affb
+SHA1: e9333e76727cc054a53f46b1686314e1557e0a2e
+MD5sum: 2621a5ca71e316bfcab800e549c2f860
 Description: FlagBLAS — linear-algebra kernels for FlagOS
  GEMM and related BLAS-level operators implemented in Triton, targeting FlagOS multi-vendor accelerators.
 
